@@ -22,7 +22,8 @@
             android:name=".PlanoDeAulaActivity"
             android:label="@string/title_activity_plano_de_aula"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MomentosAcitivity"></activity>
+        <activity android:name=".MomentosActivity" />
+        <activity android:name=".ProfessorActivity"></activity>
     </application>
 
 </manifest>

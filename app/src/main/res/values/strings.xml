@@ -5,4 +5,9 @@
     <string name="descricao">Descrição</string>
     <string name="titulo">Titulo</string>
     <string name="texto">Adicione aqui o texto</string>
+    <string name="nome">Nome</string>
+    <string name="email">email@email.com</string>
+    <string name="password">senha</string>
+    <string name="tipo_trabalho">Tipo de trabalho</string>
+    <string name="disciplinas">Adicione as disciplinas que você tem dominio e interesse</string>
 </resources>
