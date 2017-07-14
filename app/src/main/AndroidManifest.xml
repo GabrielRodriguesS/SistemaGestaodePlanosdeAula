@@ -24,7 +24,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MomentosActivity" />
         <activity android:name=".ProfessorActivity" />
-        <activity android:name=".DisciplinaActivity"></activity>
+        <activity android:name=".DisciplinaActivity" />
+        <activity android:name=".SubDisciplinaActivity"></activity>
     </application>
 
 </manifest>
