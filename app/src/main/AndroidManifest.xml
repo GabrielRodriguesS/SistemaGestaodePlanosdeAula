@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,13 +19,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PlanoDeAulaActivity"
+            android:name=".activitys.PlanoDeAulaActivity"
             android:label="@string/title_activity_plano_de_aula"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MomentosActivity" />
-        <activity android:name=".ProfessorActivity" />
-        <activity android:name=".DisciplinaActivity" />
-        <activity android:name=".SubDisciplinaActivity"></activity>
+        <activity android:name=".activitys.MomentosActivity" />
+        <activity android:name=".activitys.ProfessorActivity" />
+        <activity android:name=".activitys.DisciplinaActivity" />
+        <activity android:name=".activitys.SubDisciplinaActivity" />
     </application>
 
 </manifest>
