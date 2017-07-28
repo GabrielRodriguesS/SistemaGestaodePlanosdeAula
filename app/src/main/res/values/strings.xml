@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">SGPA</string>
     <string name="title_activity_plano_de_aula">PlanoDeAulaActivity</string>
-    <string name="sub_titulo">Sub Titulo</string>
+    <string name="sub_titulo">Subtítulo</string>
     <string name="descricao">Descrição</string>
-    <string name="titulo">Titulo</string>
+    <string name="titulo">Título</string>
     <string name="texto">Adicione aqui o texto</string>
     <string name="nome">Nome</string>
     <string name="email">email@email.com</string>
     <string name="password">senha</string>
     <string name="tipo_trabalho">Tipo de trabalho</string>
-    <string name="disciplinas">Adicione as disciplinas que você tem dominio e interesse</string>
+    <string name="disciplinas">Adicione as disciplinas que você tem domínio e interesse</string>
     <string name="sub_disciplina_descricao">Adicione a(s) sub disciplinas relacionadas</string>
     <string name="title_activity_plano_de_aula_create">PlanoDeAulaCreateActivity</string>
     <string name="disciplina_descricao">Adicione a disciplina relacionada ao plano</string>

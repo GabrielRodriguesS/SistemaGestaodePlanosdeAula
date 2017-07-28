@@ -2,6 +2,7 @@ package com.sgpa.models;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.sgpa.utils.WebClient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -77,5 +78,9 @@ public class Momentos implements Serializable {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    public void save(){
+        //TODO Transformar em JSONObject e Salvar pelo WebClient
     }
 }
