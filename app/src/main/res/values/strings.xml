@@ -12,5 +12,5 @@
     <string name="disciplinas">Adicione as disciplinas que você tem dominio e interesse</string>
     <string name="sub_disciplina_descricao">Adicione a(s) sub disciplinas relacionadas</string>
     <string name="title_activity_plano_de_aula_create">PlanoDeAulaCreateActivity</string>
-    <string name="disciplina_descricao">Adicione a(s) disciplina relacionada</string>
+    <string name="disciplina_descricao">Adicione a disciplina relacionada ao plano</string>
 </resources>

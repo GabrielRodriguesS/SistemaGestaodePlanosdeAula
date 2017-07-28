@@ -14,7 +14,6 @@
         <activity android:name=".activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -23,9 +22,6 @@
             android:label="@string/title_activity_plano_de_aula"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activitys.MomentosActivity" />
-        <activity android:name=".activitys.ProfessorActivity" />
-        <activity android:name=".activitys.DisciplinaActivity" />
-        <activity android:name=".activitys.SubDisciplinaActivity" />
     </application>
 
 </manifest>

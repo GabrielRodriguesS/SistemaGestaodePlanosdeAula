@@ -20,8 +20,8 @@ public class WebClient implements Runnable {
 
     public void getJsonFromWebService() throws IOException {
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url("http://10.2.3.117:80/"+this.getUrl()).build();
-        //Request request = new Request.Builder().url("http://192.168.21.2:80/"+this.getUrl()).build();
+        //Request request = new Request.Builder().url("http://10.2.3.117:80/"+this.getUrl()).build();
+        Request request = new Request.Builder().url("http://192.168.0.102:80/"+this.getUrl()).build();
         Response response = client.newCall(request).execute();
         this.setJson(response.body().string());
     }
