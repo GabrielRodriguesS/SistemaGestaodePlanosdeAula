@@ -54,8 +54,8 @@ public class Recursos implements Serializable {
 
     @Override
     public String toString() {
-        return "Recursos{" +
-                "link='" + link + '\'' +
-                '}';
+        return this.getId().toString();
     }
+
+
 }
