@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sgpa.activitys.RecursosActivity">
+
+    <ScrollView
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/link"
+                android:inputType="textPersonName" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/addButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="172dp"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:onClick="createPlanoDeAula"
+                app:backgroundTint="@android:color/holo_red_dark"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scrollView2"
+                app:layout_constraintVertical_bias="0.296"
+                app:srcCompat="@android:drawable/ic_menu_save"
+                tools:ignore="RtlHardcoded" />
+        </LinearLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

@@ -13,4 +13,6 @@
     <string name="sub_disciplina_descricao">Adicione a(s) sub disciplinas relacionadas</string>
     <string name="title_activity_plano_de_aula_create">PlanoDeAulaCreateActivity</string>
     <string name="disciplina_descricao">Adicione a disciplina relacionada ao plano</string>
+    <string name="title_activity_recursos">RecursosActivity</string>
+    <string name="link">Link</string>
 </resources>
