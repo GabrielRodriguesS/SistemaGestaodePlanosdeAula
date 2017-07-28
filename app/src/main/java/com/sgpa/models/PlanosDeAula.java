@@ -1,25 +1,16 @@
 package com.sgpa.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
+import java.util.ArrayList;
 
 
 public class PlanosDeAula implements Serializable {
 
     private Long id;
-
     private String titulo;
-
     private String subtitulo;
-
     private String descricao;
-
-    @SerializedName("professores_id")
-    private Long professorId;
-
-    public PlanosDeAula() {
-    }
+    private ArrayList<Momentos> momentos;
 
     public Long getId() {
         return id;
@@ -53,12 +44,12 @@ public class PlanosDeAula implements Serializable {
         this.descricao = descricao;
     }
 
-    public Long getProfessorId() {
-        return professorId;
+    public ArrayList<Momentos> getMomentos() {
+        return momentos;
     }
 
-    public void setProfessorId(Long professorId) {
-        this.professorId = professorId;
+    public void setMomentos(ArrayList<Momentos> momentos) {
+        this.momentos = momentos;
     }
 
     @Override
@@ -76,7 +67,7 @@ public class PlanosDeAula implements Serializable {
 
     @Override
     public String toString() {
-        return "Titulo: " + this.titulo + " Id: " + this.id;
+        return "Titulo: " + this.getTitulo() + " \nSubtitulo " + this.getSubtitulo();
     }
 
 

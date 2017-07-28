@@ -3,6 +3,7 @@ package com.sgpa.activitys;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,6 +23,8 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import static android.support.constraint.R.id.parent;
+
 public class MainActivity extends AppCompatActivity {
 
     protected ArrayAdapter<PlanosDeAula> planosDeAulaAdapter;
@@ -32,15 +35,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_plano_de_aula);
-        this.planosDeAulaAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1);
+        this.planosDeAulaAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         this.planoDeAulaList = (ListView) findViewById(R.id.list_plano_de_aula);
         this.inflateList();
         this.planoDeAulaList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent viewActivity = new Intent(parent.getContext(), PlanoDeAulaActivity.class);
-                viewActivity.putExtra("planoDeAula", listFromJson.get(position));
-                startActivity(viewActivity);
+                Intent planoDeAulaView = new Intent(parent.getContext(), PlanoDeAulaActivity.class);
+                planoDeAulaView.putExtra("planoDeAula", listFromJson.get(position));
+                startActivity(planoDeAulaView);
             }
         });
     }
@@ -48,13 +51,12 @@ public class MainActivity extends AppCompatActivity {
     private void inflateList() {
         Type type = new TypeToken<ArrayList<PlanosDeAula>>(){}.getType();
         WebClient webClient = new WebClient("planoDeAula/getAll");
-        GsonUtils gson = new GsonUtils();
         Thread thread = new Thread(webClient);
         thread.start();
         try {
             thread.join();
             String listaJson = webClient.getJson();
-            listFromJson = gson.getList(listaJson, type);
+            listFromJson = GsonUtils.getInstance().getList(listaJson, type);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -63,5 +65,10 @@ public class MainActivity extends AppCompatActivity {
             planosDeAulaAdapter.addAll(listFromJson);
             planoDeAulaList.setAdapter(planosDeAulaAdapter);
         }
+    }
+
+    public void createPlanoDeAula(View view){
+        Intent viewActivity = new Intent(this, PlanoDeAulaActivity.class);
+        startActivity(viewActivity);
     }
 }
