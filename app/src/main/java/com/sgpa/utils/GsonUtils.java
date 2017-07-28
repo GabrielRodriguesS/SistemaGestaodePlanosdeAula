@@ -25,5 +25,10 @@ public class GsonUtils {
     public Object getObject(String json, Class clazz){
         return gson.fromJson(json, clazz);
     }
+
+    public String setObject(Object object) {
+        return gson.toJson(object);
+    }
+
 }
 
