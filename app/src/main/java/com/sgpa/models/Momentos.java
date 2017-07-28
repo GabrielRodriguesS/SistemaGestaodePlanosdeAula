@@ -2,6 +2,8 @@ package com.sgpa.models;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.sgpa.utils.GsonUtils;
+import com.sgpa.utils.WebClient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ public class Momentos implements Serializable {
     private String nome;
     private String texto;
     @SerializedName("planos_de_aula_id")
-    private PlanosDeAula planosDeAula;
+    private PlanosDeAula planoDeAula;
     private ArrayList<Recursos> recursos;
 
     public Long getId() {
@@ -39,12 +41,12 @@ public class Momentos implements Serializable {
         this.texto = texto;
     }
 
-    public PlanosDeAula getPlanosDeAula() {
-        return planosDeAula;
+    public PlanosDeAula getPlanoDeAula() {
+        return planoDeAula;
     }
 
-    public void setPlanosDeAula(PlanosDeAula planosDeAula) {
-        this.planosDeAula = planosDeAula;
+    public void setPlanoDeAula(PlanosDeAula planoDeAula) {
+        this.planoDeAula = planoDeAula;
     }
 
     public ArrayList<Recursos> getRecursos() {
@@ -57,10 +59,7 @@ public class Momentos implements Serializable {
 
     @Override
     public String toString() {
-        return "Momentos{" +
-                "nome='" + nome + '\'' +
-                ", texto='" + texto + '\'' +
-                '}';
+        return this.getId().toString();
     }
 
     @Override
@@ -77,5 +76,17 @@ public class Momentos implements Serializable {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    public void save(){
+        String object = GsonUtils.getInstance().setObject(this);
+        WebClient webClient = new WebClient("momento/save", object);
+        Thread t = new Thread(webClient);
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
