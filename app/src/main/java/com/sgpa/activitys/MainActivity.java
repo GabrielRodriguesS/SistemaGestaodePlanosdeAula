@@ -28,7 +28,7 @@ import static android.support.constraint.R.id.parent;
 public class MainActivity extends AppCompatActivity {
 
     protected ArrayAdapter<PlanosDeAula> planosDeAulaAdapter;
-    protected ArrayList<PlanosDeAula> listFromJson = new ArrayList();
+    protected ArrayList<PlanosDeAula> listFromJson;
     protected ListView planoDeAulaList;
 
     @Override
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_plano_de_aula);
         this.planosDeAulaAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         this.planoDeAulaList = (ListView) findViewById(R.id.list_plano_de_aula);
+        this.listFromJson  = new ArrayList();
         this.inflateList();
         this.planoDeAulaList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

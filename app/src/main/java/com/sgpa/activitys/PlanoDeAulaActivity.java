@@ -1,38 +1,50 @@
 package com.sgpa.activitys;
 
-import android.content.Context;
+import android.animation.ObjectAnimator;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.sgpa.R;
 import com.sgpa.models.PlanosDeAula;
+import com.sgpa.utils.GsonUtils;
 import com.sgpa.utils.ViewUtils;
+import com.sgpa.utils.WebClient;
 
 public class PlanoDeAulaActivity extends AppCompatActivity {
 
-    // TODO: adicionar ou não uma lista de momentos me plano de aula?
     protected PlanosDeAula planosDeAula;
+    protected ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plano_de_aula);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
         if (getIntent().hasExtra("planoDeAula")) {
             this.planosDeAula = (PlanosDeAula) getIntent().getExtras().get("planoDeAula");
             this.inflateAllInputs();
+        } else {
+            this.planosDeAula = new PlanosDeAula();
         }
     }
 
     public void createPlanoDeAula(View view) {
         this.getAttributesFromView();
-
+        this.loadingToSavePlanoDeAula();
+        Intent mainView = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(mainView);
     }
 
-    public void createAndAddMomentosPlanoDeAula(View view){
+    public void createAndAddMomentosPlanoDeAula(View view) {
         this.getAttributesFromView();
+        this.loadingToSavePlanoDeAula();
         Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
         momentosView.putExtra("planoDeAula", this.planosDeAula);
         startActivity(momentosView);
@@ -57,4 +69,16 @@ public class PlanoDeAulaActivity extends AppCompatActivity {
         this.planosDeAula.setDescricao(ViewUtils.getValue(view, R.id.descricao));
     }
 
+    private void loadingToSavePlanoDeAula() {
+        /*progressBar.setVisibility(View.VISIBLE);
+        ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", 0, 100);
+        animation.setDuration(15000);
+        animation.setInterpolator(new DecelerateInterpolator());
+        animation.start();
+        */
+        String json = GsonUtils.getInstance().setObject(this.planosDeAula);
+        WebClient webClient = new WebClient("planoDeAula/save", json);
+        Thread thread = new Thread(webClient);
+        thread.start();
+    }
 }
