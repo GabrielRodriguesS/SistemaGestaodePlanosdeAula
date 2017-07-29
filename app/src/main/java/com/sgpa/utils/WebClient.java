@@ -32,8 +32,6 @@ public class WebClient implements Runnable {
 
     private void getJsonFromWebService() throws IOException {
         OkHttpClient client = new OkHttpClient();
-
-        //Request request = new Request.Builder().url("http://10.2.3.117:80/"+this.getUrl()).build();
         Request request = new Request.Builder()
                 .url("http://" + IP + ":80/" + this.getUrl())
                 .addHeader("content-type", "application/json; charset=utf-8")
@@ -49,8 +47,6 @@ public class WebClient implements Runnable {
         OkHttpClient client = new OkHttpClient();
 
         RequestBody requestBody = RequestBody.create(JSON, jsonObject.toString());
-
-        //Request request = new Request.Builder().url("http://10.2.3.117:80/"+this.getUrl()).build();
         Request request = new Request.Builder()
                 .url("http://" + IP + ":80/" + this.getUrl())
                 .post(requestBody)
