@@ -78,7 +78,7 @@ public class Momentos implements Serializable {
         return id != null ? id.hashCode() : 0;
     }
 
-    public void save(){
+    public Momentos save(){
         String object = GsonUtils.getInstance().setObject(this);
         WebClient webClient = new WebClient("momento/save", object);
         Thread t = new Thread(webClient);
@@ -88,5 +88,6 @@ public class Momentos implements Serializable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return (Momentos) GsonUtils.getInstance().getObject(webClient.getJson(), Momentos.class);
     }
 }

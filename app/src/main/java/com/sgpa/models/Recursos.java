@@ -2,6 +2,8 @@ package com.sgpa.models;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.sgpa.utils.GsonUtils;
+import com.sgpa.utils.WebClient;
 
 import java.io.Serializable;
 
@@ -58,4 +60,10 @@ public class Recursos implements Serializable {
     }
 
 
+    public void save() {
+        String object = GsonUtils.getInstance().setObject(this);
+        WebClient webClient = new WebClient("recurso/save", object);
+        Thread t = new Thread(webClient);
+        t.start();
+    }
 }

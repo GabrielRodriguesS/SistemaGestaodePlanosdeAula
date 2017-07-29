@@ -17,6 +17,7 @@ public class MomentosActivity extends AppCompatActivity {
     private Momentos momento;
     private ArrayList<Recursos> recursos;
     private long planoDeAulaId;
+    static final int PICK_RECURSO_REQUEST = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +31,27 @@ public class MomentosActivity extends AppCompatActivity {
     public void getAttributesFromView(View view){
         this.momento.setNome(ViewUtils.getValue(view, R.id.titulo));
         this.momento.setTexto(ViewUtils.getValue(view, R.id.texto));
-        this.momento.save();
+        this.momento = this.momento.save();
+        if(!this.recursos.isEmpty()){
+            for (Recursos recurso: this.recursos) {
+                recurso.setMomento(this.momento);
+                recurso.save();
+            }
+        }
+        finish();
     }
 
     public void adicionarRecurso(View view) {
+        Intent momentosView = new Intent(getApplicationContext(), RecursosActivity.class);
+        startActivityForResult(momentosView, PICK_RECURSO_REQUEST);
+    }
 
-        //Intent momentosView = new Intent(getApplicationContext(), .class);
-        //startActivity(momentosView);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_RECURSO_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Recursos recurso = (Recursos) data.getExtras().getSerializable("recurso");
+                recursos.add(recurso);
+            }
+        }
     }
 }
