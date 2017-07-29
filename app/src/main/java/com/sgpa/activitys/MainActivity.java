@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         //todo criar um tratamento de exceçao para o erro mais famoso do Java (nullPointerException)
+
         if(!listFromJson.isEmpty() || listFromJson != null) {
             planosDeAulaAdapter.addAll(listFromJson);
             planoDeAulaList.setAdapter(planosDeAulaAdapter);

@@ -1,14 +1,11 @@
 package com.sgpa.activitys;
 
-import android.animation.ObjectAnimator;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 
 import com.sgpa.R;
 import com.sgpa.models.PlanosDeAula;
@@ -19,14 +16,11 @@ import com.sgpa.utils.WebClient;
 public class PlanoDeAulaActivity extends AppCompatActivity {
 
     protected PlanosDeAula planosDeAula;
-    protected ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plano_de_aula);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
         if (getIntent().hasExtra("planoDeAula")) {
             this.planosDeAula = (PlanosDeAula) getIntent().getExtras().get("planoDeAula");
             this.inflateAllInputs();
@@ -46,7 +40,7 @@ public class PlanoDeAulaActivity extends AppCompatActivity {
         this.getAttributesFromView();
         this.loadingToSavePlanoDeAula();
         Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
-        momentosView.putExtra("planoDeAula", this.planosDeAula);
+        momentosView.putExtra("planos_de_aula_id", this.planosDeAula);
         startActivity(momentosView);
     }
 
@@ -70,15 +64,16 @@ public class PlanoDeAulaActivity extends AppCompatActivity {
     }
 
     private void loadingToSavePlanoDeAula() {
-        /*progressBar.setVisibility(View.VISIBLE);
-        ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", 0, 100);
-        animation.setDuration(15000);
-        animation.setInterpolator(new DecelerateInterpolator());
-        animation.start();
-        */
+        // TODO: adicionar as coisas da progressbar aqui
         String json = GsonUtils.getInstance().setObject(this.planosDeAula);
         WebClient webClient = new WebClient("planoDeAula/save", json);
         Thread thread = new Thread(webClient);
         thread.start();
+        try {
+            thread.join();
+            this.planosDeAula = (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getJson(), PlanosDeAula.class);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

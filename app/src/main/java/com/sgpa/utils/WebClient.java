@@ -1,8 +1,7 @@
 package com.sgpa.utils;
 
 
-import android.util.Log;
-
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -59,28 +58,11 @@ public class WebClient implements Runnable {
         this.setJson(response.body().string());
     }
 
-    private void postJsonToWebService() throws IOException {
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        OkHttpClient client = new OkHttpClient();
-        RequestBody requestBody = RequestBody.create(JSON, this.json);
-        Request request = new Request.Builder()
-                .url("http://" + IP + ":80/" + this.getUrl())
-                .post(requestBody)
-                .addHeader("Accept", "application/json")
-                .addHeader("Content-type", "application/json")
-                .build();
-        Response response = client.newCall(request).execute();
-        Log.i("retorno", this.getJson());
-        this.setJson(response.body().string());
-        Log.i("retorno", this.getJson());
-    }
-
     @Override
     public void run() {
         try {
             if (isPostMethod()) {
-                //postJsonFromWebService();
-                postJsonToWebService();
+                postJsonFromWebService();
             } else {
                 getJsonFromWebService();
             }
