@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         this.planoDeAulaList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent planoDeAulaView = new Intent(parent.getContext(), PlanoDeAulaActivity.class);
-                planoDeAulaView.putExtra("planoDeAula", listFromJson.get(position));
+                Intent planoDeAulaView = new Intent(parent.getContext(), ViewPlanoDeAula.class);
+                planoDeAulaView.putExtra("plano_de_aula_id", listFromJson.get(position).getId());
                 startActivity(planoDeAulaView);
             }
         });
@@ -63,9 +63,12 @@ public class MainActivity extends AppCompatActivity {
         }
         //todo criar um tratamento de exceçao para o erro mais famoso do Java (nullPointerException)
 
-        if(!listFromJson.isEmpty() || listFromJson != null) {
+        if(!listFromJson.isEmpty()) {
             planosDeAulaAdapter.addAll(listFromJson);
             planoDeAulaList.setAdapter(planosDeAulaAdapter);
+        }else{
+            Log.i("texte", "passou");
+            Toast.makeText(this, "Sem planos de aula cadastrados", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -67,7 +67,7 @@ public class PlanosDeAula implements Serializable {
 
     @Override
     public String toString() {
-        return this.getId().toString();
+        return "\t\t\t\t\t" + this.getTitulo() + " \n" + this.getSubtitulo();
     }
 
 

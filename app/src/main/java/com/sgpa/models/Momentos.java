@@ -59,7 +59,7 @@ public class Momentos implements Serializable {
 
     @Override
     public String toString() {
-        return this.getId().toString();
+        return "Titulo: " + this.getNome();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class Momentos implements Serializable {
         return id != null ? id.hashCode() : 0;
     }
 
-    public Momentos save(){
+    public Momentos save() {
         String object = GsonUtils.getInstance().setObject(this);
         WebClient webClient = new WebClient("momento/save", object);
         Thread t = new Thread(webClient);
