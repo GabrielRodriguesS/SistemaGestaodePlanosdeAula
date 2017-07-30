@@ -1,5 +1,8 @@
 package com.sgpa.models;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -65,9 +68,10 @@ public class PlanosDeAula implements Serializable {
         return titulo.hashCode();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public String toString() {
-        return this.getId().toString();
+        return "Titulo: " + this.getTitulo() + "\n" + this.getSubtitulo();
     }
 
 
