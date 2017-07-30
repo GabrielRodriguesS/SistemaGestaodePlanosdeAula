@@ -15,6 +15,7 @@ import com.sgpa.utils.WebClient;
 
 public class PlanoDeAulaActivity extends AppCompatActivity {
 
+    // TODO: adicionar ou não uma lista de momentos me plano de aula?
     protected PlanosDeAula planosDeAula;
 
     @Override
@@ -36,16 +37,16 @@ public class PlanoDeAulaActivity extends AppCompatActivity {
         startActivity(mainView);
     }
 
-    public void createAndAddMomentosPlanoDeAula(View view) {
+    public void createAndAddMomentosPlanoDeAula(View view){
         this.getAttributesFromView();
-        this.loadingToSavePlanoDeAula();
+        //this.loadingToSavePlanoDeAula();
         Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
-        momentosView.putExtra("planos_de_aula_id", this.planosDeAula);
+        momentosView.putExtra("plano_de_aula_id", this.planosDeAula.getId());
         startActivity(momentosView);
     }
 
     private void inflateAllInputs() {
-        View view = findViewById(R.id.activity_create_plano_de_aula);
+        View view = getWindow().getDecorView().getRootView();
         this.setInput(ViewUtils.getEditText(view, R.id.titulo), this.planosDeAula.getTitulo());
         this.setInput(ViewUtils.getEditText(view, R.id.descricao), this.planosDeAula.getDescricao());
         this.setInput(ViewUtils.getEditText(view, R.id.sub_titulo), this.planosDeAula.getSubtitulo());
@@ -57,7 +58,7 @@ public class PlanoDeAulaActivity extends AppCompatActivity {
     }
 
     private void getAttributesFromView() {
-        View view = findViewById(R.id.activity_create_plano_de_aula);
+        View view = getWindow().getDecorView().getRootView();
         this.planosDeAula.setTitulo(ViewUtils.getValue(view, R.id.titulo));
         this.planosDeAula.setSubtitulo(ViewUtils.getValue(view, R.id.sub_titulo));
         this.planosDeAula.setDescricao(ViewUtils.getValue(view, R.id.descricao));

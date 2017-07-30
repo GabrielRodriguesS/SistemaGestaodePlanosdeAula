@@ -14,7 +14,7 @@ import okhttp3.Response;
 
 public class WebClient implements Runnable {
 
-    private static final String IP = "192.168.0.102";
+    private static final String IP = "192.168.1.28";
     private String url;
     private String json;
     private boolean isPostMethod;

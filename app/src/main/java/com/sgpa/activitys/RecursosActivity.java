@@ -1,5 +1,7 @@
 package com.sgpa.activitys;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,9 +18,15 @@ public class RecursosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_recursos);
+        this.recurso = new Recursos();
     }
 
     public void getAttributesFromView(View view){
-        this.recurso.setLink(ViewUtils.getValue(view, R.id.link));
+        View rootView = getWindow().getDecorView().getRootView();
+        this.recurso.setLink(ViewUtils.getValue(rootView, R.id.link));
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("recurso", this.recurso);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 }

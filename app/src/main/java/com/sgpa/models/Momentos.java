@@ -13,8 +13,9 @@ public class Momentos implements Serializable {
     private Long id;
     private String nome;
     private String texto;
-    @SerializedName("planos_de_aula_id")
+    @SerializedName("planoDeAula")
     private PlanosDeAula planoDeAula;
+    @SerializedName("recursos")
     private ArrayList<Recursos> recursos;
 
     public Long getId() {
@@ -78,9 +79,9 @@ public class Momentos implements Serializable {
         return id != null ? id.hashCode() : 0;
     }
 
-    public Momentos save(){
+    public Momentos save(long planoDeAulaId){
         String object = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("momento/save", object);
+        WebClient webClient = new WebClient("momento/save/"+planoDeAulaId, object);
         Thread t = new Thread(webClient);
         t.start();
         try {

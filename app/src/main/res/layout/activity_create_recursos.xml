@@ -33,7 +33,7 @@
                 android:layout_marginLeft="172dp"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
-                android:onClick="createPlanoDeAula"
+                android:onClick="getAttributesFromView"
                 app:backgroundTint="@android:color/holo_red_dark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

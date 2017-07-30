@@ -1,5 +1,7 @@
 package com.sgpa.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -10,6 +12,7 @@ public class PlanosDeAula implements Serializable {
     private String titulo;
     private String subtitulo;
     private String descricao;
+    @SerializedName("momentos")
     private ArrayList<Momentos> momentos;
 
     public Long getId() {
