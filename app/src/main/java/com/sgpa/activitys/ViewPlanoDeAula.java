@@ -34,7 +34,7 @@ public class ViewPlanoDeAula extends AppCompatActivity {
             this.inflateAllInputs();
         }
         // TODO: adicionar o suporte ao editar dos momentos
-        //// TODO: implementar o visualizar do momento talvez com um longclick com a opção de ver e editar
+        // TODO: implementar o visualizar do momento talvez com um longclick com a opção de ver e editar
         this.momentosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

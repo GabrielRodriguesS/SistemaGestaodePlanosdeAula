@@ -37,7 +37,9 @@ public class WebClient implements Runnable {
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .build();
         Response response = client.newCall(request).execute();
-        this.setJson(response.body().string());
+        if (response.isSuccessful()) {
+            this.setJson(response.body().string());
+        }
     }
 
     private void postJsonFromWebService() throws IOException {

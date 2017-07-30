@@ -27,7 +27,8 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
         if (getIntent().hasExtra("planoDeAula")) {
             this.planosDeAula = (PlanosDeAula) getIntent().getExtras().get("planoDeAula");
             this.inflateAllInputs();
-        } else if (getIntent().hasExtra("edit")) {
+        }
+        if (getIntent().hasExtra("edit")) {
             this.edit = (boolean) getIntent().getExtras().get("edit");
         } else {
             this.planosDeAula = new PlanosDeAula();
@@ -46,19 +47,23 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
         this.goToMainView();
     }
 
-    public void createAndAddMomentosPlanoDeAula(View view) {
+    public void createAndAddMomentosPlanoDeAula() {
         this.getAttributesFromView();
         this.loadingToSavePlanoDeAula();
-        Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
-        momentosView.putExtra("planos_de_aula_id", this.planosDeAula.getId());
-        startActivity(momentosView);
+        this.goToMainView();
+    }
+
+    public void editAndAddMomentosPlanoDeAula() {
+        this.getAttributesFromView();
+        this.loadingToEditPlanoDeAula();
+        this.goToAddMomentosView();
     }
 
     private void inflateAllInputs() {
-        View view = findViewById(R.id.activity_create_plano_de_aula);
+        View view = getWindow().getDecorView().getRootView();
         this.setInput(ViewUtils.getEditText(view, R.id.titulo), this.planosDeAula.getTitulo());
         this.setInput(ViewUtils.getEditText(view, R.id.descricao), this.planosDeAula.getDescricao());
-        this.setInput(ViewUtils.getEditText(view, R.id.sub_titulo), this.planosDeAula.getSubtitulo());
+        this.setInput(ViewUtils.getEditText(view, R.id.subtitulo), this.planosDeAula.getSubtitulo());
 
     }
 
@@ -67,13 +72,13 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void getAttributesFromView() {
-        View view = findViewById(R.id.activity_create_plano_de_aula);
+        View view = getWindow().getDecorView().getRootView();
         this.planosDeAula.setTitulo(ViewUtils.getValue(view, R.id.titulo));
-        this.planosDeAula.setSubtitulo(ViewUtils.getValue(view, R.id.sub_titulo));
+        this.planosDeAula.setSubtitulo(ViewUtils.getValue(view, R.id.subtitulo));
         this.planosDeAula.setDescricao(ViewUtils.getValue(view, R.id.descricao));
     }
 
-        // TODO: adicionar as coisas da progressbar aqui
+    // TODO: adicionar as coisas da progressbar
     private void loadingToSavePlanoDeAula() {
         String json = GsonUtils.getInstance().setObject(this.planosDeAula);
         WebClient webClient = new WebClient("planoDeAula/save", json);
@@ -99,17 +104,32 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private void goToMainView(){
+    private void goToMainView() {
         Intent mainView = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(mainView);
     }
 
+    private void goToAddMomentosView() {
+        Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
+        momentosView.putExtra("planos_de_aula_id", this.planosDeAula.getId());
+        startActivity(momentosView);
+    }
+
+    // TODO: 30/07/17 implementar o delete  
     @Override
     public void onClick(View view) {
         if (this.edit) {
-            this.editPlanodeAula();
+            if (view.getId() == R.id.add_momentos_button) {
+                this.editAndAddMomentosPlanoDeAula();
+            } else {
+                this.editPlanodeAula();
+            }
         } else {
-            this.createPlanoDeAula();
+            if (view.getId() == R.id.add_momentos_button) {
+                this.createAndAddMomentosPlanoDeAula();
+            } else {
+                this.createPlanoDeAula();
+            }
         }
     }
 }
