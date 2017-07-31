@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 28-Jul-2017 às 18:40
+-- Generation Time: 31-Jul-2017 às 16:30
 -- Versão do servidor: 10.1.21-MariaDB
 -- PHP Version: 7.0.15
 
@@ -33,6 +33,18 @@ CREATE TABLE `momentos` (
   `texto` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Extraindo dados da tabela `momentos`
+--
+
+INSERT INTO `momentos` (`id`, `planos_de_aulas_id`, `nome`, `texto`) VALUES
+(2, 2, 'texto grande', 'texto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grande'),
+(3, 2, 'texto grande', 'texto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grande'),
+(4, 2, 'texto grande', 'texto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grande'),
+(5, 2, 'texto grande', 'texto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grande'),
+(6, 2, 'texto grande', 'texto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grande'),
+(7, 2, 'texto grande', 'texto grandetexto grandetexto grande');
+
 -- --------------------------------------------------------
 
 --
@@ -51,10 +63,7 @@ CREATE TABLE `planos_de_aula` (
 --
 
 INSERT INTO `planos_de_aula` (`id`, `titulo`, `subtitulo`, `descricao`) VALUES
-(1, 'Plano 1', 'Subtitulo', 'descrição do plano 1 blblabalbalbalbalbal'),
-(2, 'Plano 2 ', 'subtitulo', 'blablabalbablablabalbablablabalbablablabalba'),
-(3, 'teste3', 'subtitulo ', 'desc'),
-(4, 'teste 4 ', 'sub titulo', 'desc');
+(2, 'Teste 1', 'subtitulo', 'texto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grandetexto grande');
 
 -- --------------------------------------------------------
 
@@ -100,17 +109,17 @@ ALTER TABLE `recursos`
 -- AUTO_INCREMENT for table `momentos`
 --
 ALTER TABLE `momentos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `planos_de_aula`
 --
 ALTER TABLE `planos_de_aula`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `recursos`
 --
 ALTER TABLE `recursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- Constraints for dumped tables
 --
@@ -119,13 +128,13 @@ ALTER TABLE `recursos`
 -- Limitadores para a tabela `momentos`
 --
 ALTER TABLE `momentos`
-  ADD CONSTRAINT `fk_momentos_planos_de_aulas` FOREIGN KEY (`planos_de_aulas_id`) REFERENCES `planos_de_aula` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_momentos_planos_de_aulas` FOREIGN KEY (`planos_de_aulas_id`) REFERENCES `planos_de_aula` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `recursos`
 --
 ALTER TABLE `recursos`
-  ADD CONSTRAINT `fk_recursos_momentos1` FOREIGN KEY (`momentos_id`) REFERENCES `momentos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_recursos_momentos1` FOREIGN KEY (`momentos_id`) REFERENCES `momentos` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

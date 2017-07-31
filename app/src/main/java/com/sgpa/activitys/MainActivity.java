@@ -3,6 +3,9 @@ package com.sgpa.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         this.planoDeAulaList = (ListView) findViewById(R.id.list_plano_de_aula);
         this.listFromJson = new ArrayList();
         this.inflateList();
+        registerForContextMenu(this.planoDeAulaList);
         this.planoDeAulaList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -40,6 +44,48 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(planoDeAulaView);
             }
         });
+
+        /*this.planoDeAulaList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        });*/
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId() == R.id.list_plano_de_aula) {
+            menu.add(Menu.NONE, 0, 0, R.string.editar);
+            menu.add(Menu.NONE, 1, 1, R.string.deletar);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        PlanosDeAula planosDeAula = this.listFromJson.get(info.position);
+        int menuItemIndex = item.getItemId();
+        if (menuItemIndex == 0) {
+            Intent planoDeAulaView = new Intent(this, PlanoDeAulaActivity.class);
+            planoDeAulaView.putExtra("planoDeAula", planosDeAula);
+            planoDeAulaView.putExtra("edit", true);
+            startActivity(planoDeAulaView);
+            return true;
+        } else {
+            String json = GsonUtils.getInstance().setObject(planosDeAula);
+            WebClient webClient = new WebClient("planoDeAula/delete/" + planosDeAula.getId(), json);
+            Thread thread = new Thread(webClient);
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(this, "Plano deletado com sucesso", Toast.LENGTH_SHORT).show();
+            this.planosDeAulaAdapter.remove(planosDeAula);
+            this.planosDeAulaAdapter.notifyDataSetChanged();
+            return true;
+        }
     }
 
     private void inflateList() {

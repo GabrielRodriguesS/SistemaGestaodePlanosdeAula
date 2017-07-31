@@ -65,7 +65,6 @@
             android:layout_weight="1"
             android:clickable="true"
             app:backgroundTint="@android:color/holo_red_dark"
-            app:fabSize="mini"
             app:srcCompat="@android:drawable/ic_menu_delete"
             tools:ignore="RtlHardcoded" />
 
