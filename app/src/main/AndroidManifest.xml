@@ -23,7 +23,8 @@
             android:label="@string/title_activity_plano_de_aula"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activitys.MomentosActivity" />
-        <activity android:name=".activitys.RecursosActivity"></activity>
+        <activity android:name=".activitys.RecursosActivity" />
+        <activity android:name=".activitys.ViewPlanoDeAula"></activity>
     </application>
 
 </manifest>

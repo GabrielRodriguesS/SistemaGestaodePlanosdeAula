@@ -1,6 +1,7 @@
 package com.sgpa.models;
 
-import com.google.gson.annotations.SerializedName;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ public class PlanosDeAula implements Serializable {
     private String titulo;
     private String subtitulo;
     private String descricao;
-    @SerializedName("momentos")
     private ArrayList<Momentos> momentos;
 
     public Long getId() {
@@ -68,9 +68,10 @@ public class PlanosDeAula implements Serializable {
         return titulo.hashCode();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public String toString() {
-        return this.getId().toString();
+        return "Titulo: " + this.getTitulo() + "\n" + this.getSubtitulo();
     }
 
 

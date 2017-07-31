@@ -6,6 +6,8 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,7 +16,7 @@ import okhttp3.Response;
 
 public class WebClient implements Runnable {
 
-    private static final String IP = "192.168.1.28";
+    private static final String IP = "10.2.3.117";
     private String url;
     private String json;
     private boolean isPostMethod;
@@ -37,7 +39,9 @@ public class WebClient implements Runnable {
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .build();
         Response response = client.newCall(request).execute();
-        this.setJson(response.body().string());
+        if (response.isSuccessful()) {
+            this.setJson(response.body().string());
+        }
     }
 
     private void postJsonFromWebService() throws IOException {
@@ -52,8 +56,19 @@ public class WebClient implements Runnable {
                 .post(requestBody)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .build();
-        Response response = client.newCall(request).execute();
-        this.setJson(response.body().string());
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(response.isSuccessful()){
+                    WebClient.this.setJson(response.body().string());
+                }
+            }
+        });
     }
 
     @Override
