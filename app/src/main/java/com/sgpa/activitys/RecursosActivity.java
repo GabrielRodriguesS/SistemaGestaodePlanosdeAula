@@ -20,8 +20,8 @@ public class RecursosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_recursos);
-        if (getIntent().hasExtra("isAdd")) {
-            this.isAdd = getIntent().getBooleanExtra("isAdd", false);
+        if (getIntent().hasExtra("isAddActivity")) {
+            this.isAdd = getIntent().getBooleanExtra("isAddActivity", false);
             if (getIntent().hasExtra("momentoId")) {
                 this.momentoId = getIntent().getLongExtra("momentoId", 0);
             }
@@ -33,7 +33,7 @@ public class RecursosActivity extends AppCompatActivity {
         View rootView = getWindow().getDecorView().getRootView();
         this.recurso.setLink(ViewUtils.getValue(rootView, R.id.link));
         if (isAdd) {
-            this.recurso.save();
+            this.recurso.save(this.momentoId);
         }
         Intent returnIntent = new Intent();
         returnIntent.putExtra("recurso", this.recurso);

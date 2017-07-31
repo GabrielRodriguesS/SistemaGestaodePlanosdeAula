@@ -68,14 +68,15 @@ public class ViewMomento extends AppCompatActivity {
 
     public void adicionarRecurso(View view) {
         Intent planoDeAulaView = new Intent(this, RecursosActivity.class);
-        planoDeAulaView.putExtra("add", true);
+        planoDeAulaView.putExtra("momento_id", this.momento.getId());
+        planoDeAulaView.putExtra("isAddActivity", true);
         startActivityForResult(planoDeAulaView, ADD_RECURSO_REQUEST);
     }
 
     public void editMomento(View view) {
         Intent planoDeAulaView = new Intent(this, MomentosActivity.class);
         planoDeAulaView.putExtra("momento", this.momento);
-        planoDeAulaView.putExtra("edit", true);
+        planoDeAulaView.putExtra("isEditActivity", true);
         startActivityForResult(planoDeAulaView, EDIT_MOMENTO_REQUEST);
     }
 
