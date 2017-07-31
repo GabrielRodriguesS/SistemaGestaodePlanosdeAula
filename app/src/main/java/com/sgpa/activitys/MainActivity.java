@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final int ADD_PLANO_DE_AULA_REQUEST = 0;
     protected ArrayAdapter<PlanosDeAula> planosDeAulaAdapter;
     protected ArrayList<PlanosDeAula> listFromJson;
     protected ListView planoDeAulaList;
@@ -44,12 +45,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(planoDeAulaView);
             }
         });
-
-        /*this.planoDeAulaList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            }
-        });*/
     }
 
     @Override
@@ -115,6 +110,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void createPlanoDeAula(View view) {
         Intent viewActivity = new Intent(this, PlanoDeAulaActivity.class);
-        startActivity(viewActivity);
+        startActivityForResult(viewActivity, ADD_PLANO_DE_AULA_REQUEST);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (ADD_PLANO_DE_AULA_REQUEST == requestCode) {
+            if (resultCode == RESULT_OK) {
+                PlanosDeAula planoDeAula = (PlanosDeAula) getIntent().getExtras().get("plano_de_aula");
+                if (getIntent().hasExtra("delete")) {
+                    this.listFromJson.remove(planoDeAula);
+                } else {
+                    this.listFromJson.add(planoDeAula);
+                }
+                this.planosDeAulaAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }

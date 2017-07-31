@@ -1,20 +1,19 @@
 package com.sgpa.activitys;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
 import com.sgpa.R;
 import com.sgpa.models.PlanosDeAula;
-import com.sgpa.utils.GsonUtils;
 import com.sgpa.utils.ViewUtils;
-import com.sgpa.utils.WebClient;
 
 public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // TODO: adicionar as coisas da progressbar
     protected PlanosDeAula planosDeAula;
     protected boolean edit;
 
@@ -22,14 +21,15 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plano_de_aula);
-        FloatingActionButton saveButton = (FloatingActionButton) findViewById(R.id.save_plano_button);
-        saveButton.setOnClickListener(this);
+        findViewById(R.id.save_plano_button).setOnClickListener(this);
+        findViewById(R.id.add_momentos_button).setOnClickListener(this);
         if (getIntent().hasExtra("planoDeAula")) {
             this.planosDeAula = (PlanosDeAula) getIntent().getExtras().get("planoDeAula");
             this.inflateAllInputs();
         }
         if (getIntent().hasExtra("edit")) {
             this.edit = (boolean) getIntent().getExtras().get("edit");
+            findViewById(R.id.add_momentos_button).setVisibility(View.GONE);
         } else {
             this.planosDeAula = new PlanosDeAula();
         }
@@ -37,25 +37,19 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
 
     public void createPlanoDeAula() {
         this.getAttributesFromView();
-        this.loadingToSavePlanoDeAula();
+        this.planosDeAula = this.planosDeAula.save();
         this.goToMainView();
     }
 
     public void editPlanodeAula() {
         this.getAttributesFromView();
-        this.loadingToEditPlanoDeAula();
+        this.planosDeAula = this.planosDeAula.edit();
         this.goToMainView();
     }
 
     public void createAndAddMomentosPlanoDeAula() {
         this.getAttributesFromView();
-        this.loadingToSavePlanoDeAula();
-        this.goToMainView();
-    }
-
-    public void editAndAddMomentosPlanoDeAula() {
-        this.getAttributesFromView();
-        this.loadingToEditPlanoDeAula();
+        this.planosDeAula = this.planosDeAula.save();
         this.goToAddMomentosView();
     }
 
@@ -78,52 +72,24 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
         this.planosDeAula.setDescricao(ViewUtils.getValue(view, R.id.descricao));
     }
 
-    // TODO: adicionar as coisas da progressbar
-    private void loadingToSavePlanoDeAula() {
-        String json = GsonUtils.getInstance().setObject(this.planosDeAula);
-        WebClient webClient = new WebClient("planoDeAula/save", json);
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-            this.planosDeAula = (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getJson(), PlanosDeAula.class);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadingToEditPlanoDeAula() {
-        String json = GsonUtils.getInstance().setObject(this.planosDeAula);
-        WebClient webClient = new WebClient("planoDeAula/edit/" + this.planosDeAula.getId(), json);
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void goToMainView() {
-        Intent mainView = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(mainView);
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("plano_de_aula", this.planosDeAula);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 
     private void goToAddMomentosView() {
         Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
         momentosView.putExtra("planos_de_aula_id", this.planosDeAula.getId());
         startActivity(momentosView);
+        finish();
     }
 
-    // TODO: 30/07/17 implementar o delete  
     @Override
     public void onClick(View view) {
         if (this.edit) {
-            if (view.getId() == R.id.add_momentos_button) {
-                this.editAndAddMomentosPlanoDeAula();
-            } else {
-                this.editPlanodeAula();
-            }
+            this.editPlanodeAula();
         } else {
             if (view.getId() == R.id.add_momentos_button) {
                 this.createAndAddMomentosPlanoDeAula();

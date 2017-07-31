@@ -3,6 +3,9 @@ package com.sgpa.models;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import com.sgpa.utils.GsonUtils;
+import com.sgpa.utils.WebClient;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -74,5 +77,53 @@ public class PlanosDeAula implements Serializable {
         return "Titulo: " + this.getTitulo() + "\n" + this.getSubtitulo();
     }
 
+    public PlanosDeAula save() {
+        String json = GsonUtils.getInstance().setObject(this);
+        WebClient webClient = new WebClient("planoDeAula/save", json);
+        Thread thread = new Thread(webClient);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getJson(), PlanosDeAula.class);
+    }
 
+    public PlanosDeAula edit() {
+        String json = GsonUtils.getInstance().setObject(this);
+        WebClient webClient = new WebClient("planoDeAula/edit/" + this.getId(), json);
+        Thread thread = new Thread(webClient);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getJson(), PlanosDeAula.class);
+    }
+
+    public void delete() {
+        String json = GsonUtils.getInstance().setObject(this);
+        WebClient webClient = new WebClient("planoDeAula/delete/" + this.getId(), json);
+        Thread thread = new Thread(webClient);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public PlanosDeAula show(Long id) {
+        WebClient webClient = new WebClient("planoDeAula/show/" + id);
+        Thread thread = new Thread(webClient);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getJson(), PlanosDeAula.class);
+    }
 }

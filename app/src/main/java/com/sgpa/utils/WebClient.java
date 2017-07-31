@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -33,7 +34,9 @@ public class WebClient implements Runnable {
     }
 
     private void getJsonFromWebService() throws IOException {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .build();
         Request request = new Request.Builder()
                 .url("http://" + IP + ":80/" + this.getUrl())
                 .addHeader("content-type", "application/json; charset=utf-8")
@@ -41,6 +44,8 @@ public class WebClient implements Runnable {
         Response response = client.newCall(request).execute();
         if (response.isSuccessful()) {
             this.setJson(response.body().string());
+        } else {
+            this.setJson("deu ruim");
         }
     }
 
@@ -64,7 +69,7 @@ public class WebClient implements Runnable {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     WebClient.this.setJson(response.body().string());
                 }
             }
