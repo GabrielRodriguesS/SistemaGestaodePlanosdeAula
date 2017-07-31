@@ -14,10 +14,12 @@ import okhttp3.Response;
 
 public class WebClient implements Runnable {
 
-    private static final String IP = "192.168.0.102";
+    //private static final String IP = "192.168.0.102";
+    private static final String IP = "10.2.3.117";
     private String url;
     private String json;
     private boolean isPostMethod;
+    private MediaType jsonType;
 
     public WebClient(String url) {
         this.url = url;
@@ -28,6 +30,7 @@ public class WebClient implements Runnable {
         this.url = url;
         this.json = json;
         this.setPostMethod(true);
+        this.jsonType = MediaType.parse("application/json; charset=utf-8");
     }
 
     private void getJsonFromWebService() throws IOException {
@@ -42,13 +45,13 @@ public class WebClient implements Runnable {
         }
     }
 
+
     private void postJsonFromWebService() throws IOException {
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = (JsonObject) parser.parse(getJson());
         OkHttpClient client = new OkHttpClient();
 
-        RequestBody requestBody = RequestBody.create(JSON, jsonObject.toString());
+        RequestBody requestBody = RequestBody.create(getJsonType(), jsonObject.toString());
         Request request = new Request.Builder()
                 .url("http://" + IP + ":80/" + this.getUrl())
                 .post(requestBody)
@@ -93,5 +96,9 @@ public class WebClient implements Runnable {
 
     public void setPostMethod(boolean postMethod) {
         isPostMethod = postMethod;
+    }
+
+    public MediaType getJsonType() {
+        return jsonType;
     }
 }

@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sgpa.R;
 import com.sgpa.models.Momentos;
@@ -73,6 +74,20 @@ public class ViewPlanoDeAula extends AppCompatActivity {
         textView.setText(value);
     }
 
+    public void deletePlanoDeAula(View view) {
+        String json = GsonUtils.getInstance().setObject(this.planosDeAula);
+        WebClient webClient = new WebClient("planoDeAula/delete/" + this.planosDeAula.getId(), json);
+        Thread thread = new Thread(webClient);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(this, "Plano deletado com sucesso", Toast.LENGTH_SHORT).show();
+        Intent mainView = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(mainView);
+    }
     public void editPlanoDeAula(View view) {
         Intent planoDeAulaView = new Intent(this, PlanoDeAulaActivity.class);
         planoDeAulaView.putExtra("planoDeAula", this.planosDeAula);
