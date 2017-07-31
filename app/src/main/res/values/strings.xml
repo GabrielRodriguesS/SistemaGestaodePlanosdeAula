@@ -15,4 +15,9 @@
     <string name="disciplina_descricao">Adicione a disciplina relacionada ao plano</string>
     <string name="title_activity_recursos">RecursosActivity</string>
     <string name="link">Link</string>
+    <string name="delete_plano_message">Certeza que deseja deletar o plano </string>
+    <string name="sim">Sim</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="deletar">Deletar</string>
+    <string name="editar">Editar</string>
 </resources>
