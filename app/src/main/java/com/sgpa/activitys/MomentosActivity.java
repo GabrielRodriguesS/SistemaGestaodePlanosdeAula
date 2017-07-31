@@ -23,15 +23,18 @@ public class MomentosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_momentos);
-        if (getIntent().hasCategory("plano_de_aula_id")) {
+        if (getIntent().hasExtra("plano_de_aula_id")) {
             this.planoDeAulaId = getIntent().getLongExtra("plano_de_aula_id", 0);
         }
+        this.momento = new Momentos();
+        this.recursos = new ArrayList<Recursos>();
     }
 
     public void getAttributesFromView(View view){
-        this.momento.setNome(ViewUtils.getValue(view, R.id.titulo));
-        this.momento.setTexto(ViewUtils.getValue(view, R.id.texto));
-        this.momento = this.momento.save();
+        View rootView = getWindow().getDecorView().getRootView();
+        this.momento.setNome(ViewUtils.getValue(rootView, R.id.titulo));
+        this.momento.setTexto(ViewUtils.getValue(rootView, R.id.texto));
+        this.momento = this.momento.save(this.planoDeAulaId);
         if(!this.recursos.isEmpty()){
             for (Recursos recurso: this.recursos) {
                 recurso.setMomento(this.momento);
@@ -49,7 +52,7 @@ public class MomentosActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_RECURSO_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Recursos recurso = (Recursos) data.getExtras().getSerializable("recurso");
+                Recursos recurso = (Recursos) data.getExtras().get("recurso");
                 recursos.add(recurso);
             }
         }

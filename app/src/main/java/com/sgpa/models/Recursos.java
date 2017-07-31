@@ -11,7 +11,7 @@ public class Recursos implements Serializable {
 
     private Long id;
     private String link;
-    @SerializedName("momentos_id")
+    @SerializedName("momento")
     private Momentos momento;
 
     public Long getId() {
@@ -39,6 +39,11 @@ public class Recursos implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return this.getId().toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Recursos)) return false;
@@ -54,15 +59,9 @@ public class Recursos implements Serializable {
         return id != null ? id.hashCode() : 0;
     }
 
-    @Override
-    public String toString() {
-        return this.getId().toString();
-    }
-
-
     public void save() {
         String object = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("recurso/save", object);
+        WebClient webClient = new WebClient("recurso/save/"+this.getMomento().getId(), object);
         Thread t = new Thread(webClient);
         t.start();
     }
