@@ -61,7 +61,7 @@
             android:layout_marginRight="30dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:onClick="deletePlanoDeAula"
+            android:onClick="deleteMomento"
             app:backgroundTint="@android:color/holo_red_dark"
             app:srcCompat="@android:drawable/ic_menu_delete"
             tools:ignore="RtlHardcoded" />
@@ -85,7 +85,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:clickable="true"
-            android:onClick="editPlanoDeAula"
+            android:onClick="editMomento"
             app:backgroundTint="@android:color/holo_blue_light"
             app:elevation="0dp"
             app:srcCompat="@android:drawable/ic_menu_edit" />

@@ -12,60 +12,46 @@ import android.widget.Toast;
 
 import com.sgpa.R;
 import com.sgpa.models.Momentos;
-import com.sgpa.models.PlanosDeAula;
-import com.sgpa.utils.GsonUtils;
+import com.sgpa.models.Recursos;
 import com.sgpa.utils.ViewUtils;
-import com.sgpa.utils.WebClient;
 
 public class ViewMomento extends AppCompatActivity {
 
-    protected ArrayAdapter<Momentos> momentosAdapter;
-    protected ListView momentosListView;
-    private PlanosDeAula planosDeAula;
+    protected ArrayAdapter<Recursos> recursosArrayAdapter;
+    protected ListView recursosListView;
+    private Momentos momento;
+    static final int ADD_RECURSO_REQUEST = 0;
+    static final int EDIT_MOMENTO_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_momento);
-        this.momentosListView = (ListView) findViewById(R.id.list_momentos);
-        this.momentosAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        this.recursosListView = (ListView) findViewById(R.id.list_recursos);
+        this.recursosArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         if (getIntent().hasExtra("momento_id")) {
             Long id = getIntent().getLongExtra("momento_id", 0);
-            this.showPlanoDeAula(id);
+            this.momento = this.momento.show(id);
             this.inflateAllInputs();
         }
-        // TODO: adicionar o suporte ao editar dos momentos
-        // TODO: implementar o visualizar do momento talvez com um longclick com a opção de ver e editar
-        this.momentosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        this.recursosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent momentosView = new Intent(parent.getContext(), MomentosActivity.class);
-                momentosView.putExtra("momento_id", planosDeAula.getMomentos().get(position).getId());
-                startActivity(momentosView);
+                Intent recursosView = new Intent(parent.getContext(), RecursosActivity.class);
+                recursosView.putExtra("recurso_id", momento.getRecursos().get(position).getId());
+                startActivity(recursosView);
             }
         });
     }
 
-    private void showPlanoDeAula(Long id) {
-        WebClient webClient = new WebClient("planoDeAula/show/" + id);
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-            this.planosDeAula = (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getJson(), PlanosDeAula.class);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void inflateAllInputs() {
         View view = getWindow().getDecorView().getRootView();
-        this.setText(ViewUtils.getTextView(view, R.id.titulo), "Titulo: " + this.planosDeAula.getTitulo());
-        this.setText(ViewUtils.getTextView(view, R.id.descricao), "Descrição: " + this.planosDeAula.getDescricao());
-        this.setText(ViewUtils.getTextView(view, R.id.sub_titulo), "Subtitulo: " + this.planosDeAula.getSubtitulo());
-        if (!this.planosDeAula.getMomentos().isEmpty()) {
-            this.momentosAdapter.addAll(this.planosDeAula.getMomentos());
-            this.momentosListView.setAdapter(this.momentosAdapter);
+        this.setText(ViewUtils.getTextView(view, R.id.titulo), "Titulo: " + this.momento.getNome());
+        this.setText(ViewUtils.getTextView(view, R.id.descricao), "Descrição: " + this.momento.getTexto());
+        if (!this.momento.getRecursos().isEmpty()) {
+            this.recursosArrayAdapter.addAll(this.momento.getRecursos());
+            this.recursosListView.setAdapter(this.recursosArrayAdapter);
         }
     }
 
@@ -73,24 +59,42 @@ public class ViewMomento extends AppCompatActivity {
         textView.setText(value);
     }
 
-    public void deletePlanoDeAula(View view) {
-        String json = GsonUtils.getInstance().setObject(this.planosDeAula);
-        WebClient webClient = new WebClient("planoDeAula/delete/" + this.planosDeAula.getId(), json);
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Toast.makeText(this, "Plano deletado com sucesso", Toast.LENGTH_SHORT).show();
-        Intent mainView = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(mainView);
+    public void deleteMomento(View view) {
+        this.momento.delete();
+        Toast.makeText(this, "Momento deletado com sucesso", Toast.LENGTH_SHORT).show();
+        setResult(RESULT_OK);
+        finish();
     }
-    public void editPlanoDeAula(View view) {
-        Intent planoDeAulaView = new Intent(this, PlanoDeAulaActivity.class);
-        planoDeAulaView.putExtra("planoDeAula", this.planosDeAula);
+
+    public void adicionarRecurso(View view) {
+        Intent planoDeAulaView = new Intent(this, RecursosActivity.class);
+        planoDeAulaView.putExtra("add", true);
+        startActivityForResult(planoDeAulaView, ADD_RECURSO_REQUEST);
+    }
+
+    public void editMomento(View view) {
+        Intent planoDeAulaView = new Intent(this, MomentosActivity.class);
+        planoDeAulaView.putExtra("momento", this.momento);
         planoDeAulaView.putExtra("edit", true);
-        startActivity(planoDeAulaView);
+        startActivityForResult(planoDeAulaView, EDIT_MOMENTO_REQUEST);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ADD_RECURSO_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Recursos recurso = (Recursos) data.getExtras().get("recurso");
+                this.recursosArrayAdapter.add(recurso);
+                this.recursosArrayAdapter.notifyDataSetChanged();
+            }
+        }
+        if (requestCode == EDIT_MOMENTO_REQUEST) {
+            if(requestCode == RESULT_OK) {
+                Momentos momento = (Momentos) data.getExtras().get("momento");
+                this.momento = momento;
+                View view = getWindow().getDecorView().getRootView();
+                this.setText(ViewUtils.getTextView(view, R.id.titulo), "Titulo: " + this.momento.getNome());
+                this.setText(ViewUtils.getTextView(view, R.id.descricao), "Descrição: " + this.momento.getTexto());
+            }
+        }
     }
 }
