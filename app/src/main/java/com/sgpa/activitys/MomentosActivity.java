@@ -29,6 +29,7 @@ public class MomentosActivity extends AppCompatActivity {
     }
 
     public void getAttributesFromView(View view){
+        view = getWindow().getDecorView().getRootView();
         this.momento.setNome(ViewUtils.getValue(view, R.id.titulo));
         this.momento.setTexto(ViewUtils.getValue(view, R.id.texto));
         this.momento = this.momento.save();

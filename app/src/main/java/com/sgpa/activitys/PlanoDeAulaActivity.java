@@ -22,8 +22,8 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plano_de_aula);
-        FloatingActionButton saveButton = (FloatingActionButton) findViewById(R.id.save_plano_button);
-        saveButton.setOnClickListener(this);
+        findViewById(R.id.save_plano_button).setOnClickListener(this);
+        findViewById(R.id.add_momentos_button).setOnClickListener(this);
         if (getIntent().hasExtra("planoDeAula")) {
             this.planosDeAula = (PlanosDeAula) getIntent().getExtras().get("planoDeAula");
             this.inflateAllInputs();
@@ -50,7 +50,7 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
     public void createAndAddMomentosPlanoDeAula() {
         this.getAttributesFromView();
         this.loadingToSavePlanoDeAula();
-        this.goToMainView();
+        this.goToAddMomentosView();
     }
 
     public void editAndAddMomentosPlanoDeAula() {

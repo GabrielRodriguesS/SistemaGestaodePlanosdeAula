@@ -94,4 +94,10 @@ public class ViewPlanoDeAula extends AppCompatActivity {
         planoDeAulaView.putExtra("edit", true);
         startActivity(planoDeAulaView);
     }
+
+    public void addMomentos(View view){
+        Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
+        momentosView.putExtra("planos_de_aula_id", this.planosDeAula.getId());
+        startActivity(momentosView);
+    }
 }
