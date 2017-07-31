@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.sgpa.activitys.ViewMomento">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.15"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/titulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.06"
+            android:gravity="center"
+            android:text="@string/titulo"
+            tools:ignore="NestedWeights" />
+
+        <TextView
+            android:id="@+id/descricao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal|center"
+            android:layout_weight="0.15"
+            android:gravity="center_horizontal|center"
+            android:text="@string/descricao" />
+
+        <ListView
+            android:id="@+id/list_recursos"
+            android:layout_width="match_parent"
+            android:layout_height="161dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="0.15"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/delete_momento_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:onClick="deletePlanoDeAula"
+            app:backgroundTint="@android:color/holo_red_dark"
+            app:srcCompat="@android:drawable/ic_menu_delete"
+            tools:ignore="RtlHardcoded" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_recursos_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="30dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            app:backgroundTint="@android:color/holo_blue_light"
+            app:srcCompat="@android:drawable/ic_media_play"
+            tools:ignore="RtlHardcoded" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/edit_momento_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:onClick="editPlanoDeAula"
+            app:backgroundTint="@android:color/holo_blue_light"
+            app:elevation="0dp"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+    </LinearLayout>
+
+</LinearLayout>
