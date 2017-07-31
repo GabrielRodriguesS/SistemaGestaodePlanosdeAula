@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sgpa.activitys.ViewPlanoDeAula"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.sgpa.activitys.ViewMomento">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="0.15"
         android:orientation="vertical">
 
@@ -23,15 +23,6 @@
             tools:ignore="NestedWeights" />
 
         <TextView
-            android:id="@+id/sub_titulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal|center"
-            android:layout_weight="0.05"
-            android:gravity="center_horizontal|center"
-            android:text="@string/sub_titulo" />
-
-        <TextView
             android:id="@+id/descricao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,7 +32,7 @@
             android:text="@string/descricao" />
 
         <ListView
-            android:id="@+id/list_momentos"
+            android:id="@+id/list_recursos"
             android:layout_width="match_parent"
             android:layout_height="161dp" />
 
@@ -49,13 +40,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="match_parent"
         android:layout_marginBottom="8dp"
+        android:layout_weight="0.15"
         android:gravity="center"
         android:orientation="horizontal">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/delete_plano_de_aula_button"
+            android:id="@+id/delete_momento_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="30dp"
@@ -67,19 +59,20 @@
             tools:ignore="RtlHardcoded" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/add_momentos_button"
+            android:id="@+id/add_recursos_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="30dp"
             android:layout_weight="1"
             android:clickable="true"
+            android:onClick="adicionarRecurso"
             app:backgroundTint="@android:color/holo_blue_light"
             app:srcCompat="@android:drawable/ic_media_play"
             tools:ignore="RtlHardcoded" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/edit_plano_de_aula_button"
+            android:id="@+id/edit_momento_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

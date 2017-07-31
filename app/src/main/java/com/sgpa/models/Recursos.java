@@ -65,4 +65,11 @@ public class Recursos implements Serializable {
         Thread t = new Thread(webClient);
         t.start();
     }
+
+    public void save(long momentoId) {
+        String object = GsonUtils.getInstance().setObject(this);
+        WebClient webClient = new WebClient("recurso/save/"+momentoId, object);
+        Thread t = new Thread(webClient);
+        t.start();
+    }
 }

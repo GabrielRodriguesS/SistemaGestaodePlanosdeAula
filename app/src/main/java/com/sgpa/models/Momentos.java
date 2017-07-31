@@ -91,4 +91,41 @@ public class Momentos implements Serializable {
         }
         return (Momentos) GsonUtils.getInstance().getObject(webClient.getJson(), Momentos.class);
     }
+
+    public Momentos edit(){
+        String object = GsonUtils.getInstance().setObject(this);
+        WebClient webClient = new WebClient("momento/edit/"+getId(), object);
+        Thread t = new Thread(webClient);
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return (Momentos) GsonUtils.getInstance().getObject(webClient.getJson(), Momentos.class);
+    }
+
+    public void delete() {
+        String json = GsonUtils.getInstance().setObject(this);
+        WebClient webClient = new WebClient("momento/delete/" + this.getId(), json);
+        Thread thread = new Thread(webClient);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Momentos show(long id) {
+        WebClient webClient = new WebClient("planoDeAula/show/" + id);
+        Thread thread = new Thread(webClient);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return (Momentos) GsonUtils.getInstance().getObject(webClient.getJson(), Momentos.class);
+    }
 }
