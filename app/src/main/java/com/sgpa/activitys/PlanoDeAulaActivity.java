@@ -75,13 +75,13 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
     private void goToMainView() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("plano_de_aula", this.planosDeAula);
-        setResult(Activity.RESULT_OK, returnIntent);
+        setResult(RESULT_OK, returnIntent);
         finish();
     }
 
     private void goToAddMomentosView() {
         Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
-        momentosView.putExtra("planos_de_aula_id", this.planosDeAula.getId());
+        momentosView.putExtra("plano_de_aula_id", this.planosDeAula.getId());
         startActivity(momentosView);
         finish();
     }

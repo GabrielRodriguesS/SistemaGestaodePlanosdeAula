@@ -2,6 +2,7 @@ package com.sgpa.models;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import com.sgpa.utils.GsonUtils;
 import com.sgpa.utils.WebClient;
@@ -87,7 +88,8 @@ public class PlanosDeAula implements Serializable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getJson(), PlanosDeAula.class);
+        PlanosDeAula p = (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), PlanosDeAula.class);
+        return p;
     }
 
     public PlanosDeAula edit() {
@@ -100,7 +102,7 @@ public class PlanosDeAula implements Serializable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getJson(), PlanosDeAula.class);
+        return (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), PlanosDeAula.class);
     }
 
     public void delete() {
@@ -124,6 +126,6 @@ public class PlanosDeAula implements Serializable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getJson(), PlanosDeAula.class);
+        return (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), PlanosDeAula.class);
     }
 }

@@ -40,7 +40,7 @@ public class Recursos implements Serializable {
 
     @Override
     public String toString() {
-        return this.getId().toString();
+        return this.getLink();
     }
 
     @Override
@@ -59,17 +59,54 @@ public class Recursos implements Serializable {
         return id != null ? id.hashCode() : 0;
     }
 
-    public void save() {
+    public Recursos save() {
         String object = GsonUtils.getInstance().setObject(this);
         WebClient webClient = new WebClient("recurso/save/"+this.getMomento().getId(), object);
         Thread t = new Thread(webClient);
         t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return (Recursos) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), Recursos.class);
     }
 
-    public void save(long momentoId) {
+    public Recursos save(long momentoId) {
         String object = GsonUtils.getInstance().setObject(this);
         WebClient webClient = new WebClient("recurso/save/"+momentoId, object);
         Thread t = new Thread(webClient);
         t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return (Recursos) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), Recursos.class);
+    }
+
+    public Recursos edit() {
+        String object = GsonUtils.getInstance().setObject(this);
+        WebClient webClient = new WebClient("recurso/edit/"+this.getId(), object);
+        Thread t = new Thread(webClient);
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return (Recursos) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), Recursos.class);
+    }
+
+    public void delete(){
+        String json = GsonUtils.getInstance().setObject(this);
+        WebClient webClient = new WebClient("recurso/delete/" + this.getId(), json);
+        Thread thread = new Thread(webClient);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

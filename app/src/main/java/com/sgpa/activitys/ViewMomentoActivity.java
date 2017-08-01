@@ -1,8 +1,11 @@
 package com.sgpa.activitys;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,18 +18,19 @@ import com.sgpa.models.Momentos;
 import com.sgpa.models.Recursos;
 import com.sgpa.utils.ViewUtils;
 
-public class ViewMomento extends AppCompatActivity {
+public class ViewMomentoActivity extends AppCompatActivity {
 
     protected ArrayAdapter<Recursos> recursosArrayAdapter;
     protected ListView recursosListView;
     private Momentos momento;
-    static final int ADD_RECURSO_REQUEST = 0;
+    static final int ADD_EDIT_RECURSO_REQUEST = 0;
     static final int EDIT_MOMENTO_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_momento);
+        this.momento = new Momentos();
         this.recursosListView = (ListView) findViewById(R.id.list_recursos);
         this.recursosArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         if (getIntent().hasExtra("momento_id")) {
@@ -34,16 +38,38 @@ public class ViewMomento extends AppCompatActivity {
             this.momento = this.momento.show(id);
             this.inflateAllInputs();
         }
-
-        this.recursosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent recursosView = new Intent(parent.getContext(), RecursosActivity.class);
-                recursosView.putExtra("recurso_id", momento.getRecursos().get(position).getId());
-                startActivity(recursosView);
-            }
-        });
+        registerForContextMenu(this.recursosListView);
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId() == R.id.list_recursos) {
+            menu.add(Menu.NONE, 0, 0, R.string.editar);
+            menu.add(Menu.NONE, 1, 1, R.string.deletar);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Recursos recurso = (Recursos) this.recursosListView.getItemAtPosition(info.position);
+        int menuItemIndex = item.getItemId();
+        if (menuItemIndex == 0) {
+            Intent recursosActivity = new Intent(this, RecursosActivity.class);
+            recursosActivity.putExtra("recurso", recurso);
+            recursosActivity.putExtra("isEditAcitvity", true);
+            this.recursosArrayAdapter.remove(recurso);
+            startActivityForResult(recursosActivity, ADD_EDIT_RECURSO_REQUEST);
+            return true;
+        } else {
+            recurso.delete();
+            Toast.makeText(this, "Recurso deletado com sucesso", Toast.LENGTH_SHORT).show();
+            this.recursosArrayAdapter.remove(recurso);
+            this.recursosArrayAdapter.notifyDataSetChanged();
+            return true;
+        }
+    }
+
 
     private void inflateAllInputs() {
         View view = getWindow().getDecorView().getRootView();
@@ -68,9 +94,9 @@ public class ViewMomento extends AppCompatActivity {
 
     public void adicionarRecurso(View view) {
         Intent planoDeAulaView = new Intent(this, RecursosActivity.class);
-        planoDeAulaView.putExtra("momento_id", this.momento.getId());
+        planoDeAulaView.putExtra("momentoId", this.momento.getId());
         planoDeAulaView.putExtra("isAddActivity", true);
-        startActivityForResult(planoDeAulaView, ADD_RECURSO_REQUEST);
+        startActivityForResult(planoDeAulaView, ADD_EDIT_RECURSO_REQUEST);
     }
 
     public void editMomento(View view) {
@@ -81,7 +107,7 @@ public class ViewMomento extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_RECURSO_REQUEST) {
+        if (requestCode == ADD_EDIT_RECURSO_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Recursos recurso = (Recursos) data.getExtras().get("recurso");
                 this.recursosArrayAdapter.add(recurso);
@@ -89,9 +115,9 @@ public class ViewMomento extends AppCompatActivity {
             }
         }
         if (requestCode == EDIT_MOMENTO_REQUEST) {
-            if(requestCode == RESULT_OK) {
-                Momentos momento = (Momentos) data.getExtras().get("momento");
-                this.momento = momento;
+            if(resultCode == RESULT_OK) {
+                Momentos novoMomento = (Momentos) data.getExtras().get("momento");
+                this.momento = novoMomento;
                 View view = getWindow().getDecorView().getRootView();
                 this.setText(ViewUtils.getTextView(view, R.id.titulo), "Titulo: " + this.momento.getNome());
                 this.setText(ViewUtils.getTextView(view, R.id.descricao), "Descrição: " + this.momento.getTexto());

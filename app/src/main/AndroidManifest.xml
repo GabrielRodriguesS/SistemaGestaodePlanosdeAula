@@ -24,8 +24,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activitys.MomentosActivity" />
         <activity android:name=".activitys.RecursosActivity" />
-        <activity android:name=".activitys.ViewPlanoDeAula" />
-        <activity android:name=".activitys.ViewMomento"></activity>
+        <activity android:name=".activitys.ViewPlanoDeAulaActivity" />
+        <activity android:name=".activitys.ViewMomentoActivity"></activity>
     </application>
 
 </manifest>

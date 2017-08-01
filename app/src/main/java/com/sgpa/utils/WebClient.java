@@ -7,8 +7,6 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -20,6 +18,7 @@ public class WebClient implements Runnable {
     private static final String IP = "10.2.3.117";
     private String url;
     private String json;
+    private String retornoJson;
     private boolean isPostMethod;
 
     public WebClient(String url) {
@@ -43,9 +42,9 @@ public class WebClient implements Runnable {
                 .build();
         Response response = client.newCall(request).execute();
         if (response.isSuccessful()) {
-            this.setJson(response.body().string());
+            this.setRetornoJson(response.body().string());
         } else {
-            this.setJson("deu ruim");
+            this.setRetornoJson("deu ruim");
         }
     }
 
@@ -53,7 +52,9 @@ public class WebClient implements Runnable {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = (JsonObject) parser.parse(getJson());
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .build();
 
         RequestBody requestBody = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
@@ -61,19 +62,13 @@ public class WebClient implements Runnable {
                 .post(requestBody)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    WebClient.this.setJson(response.body().string());
-                }
-            }
-        });
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+            this.setRetornoJson(response.body().string());
+        } else {
+            this.setRetornoJson(response.body().string());
+            //this.setRetornoJson("deu ruim");
+        }
     }
 
     @Override
@@ -111,5 +106,13 @@ public class WebClient implements Runnable {
 
     public void setPostMethod(boolean postMethod) {
         isPostMethod = postMethod;
+    }
+
+    public String getRetornoJson() {
+        return retornoJson;
+    }
+
+    public void setRetornoJson(String retornoJson) {
+        this.retornoJson = retornoJson;
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,13 +19,13 @@ import java.util.ArrayList;
 
 public class MomentosActivity extends AppCompatActivity {
 
-    private Momentos momento;
-    private ArrayList<Recursos> recursos;
+    static final int PICK_RECURSO_REQUEST = 0;
     protected ArrayAdapter<Recursos> recursosArrayAdapter;
     protected ListView recursosListView;
+    private Momentos momento;
+    private ArrayList<Recursos> recursos;
     private long planoDeAulaId;
     private boolean isEditActivity;
-    static final int PICK_RECURSO_REQUEST = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,9 @@ public class MomentosActivity extends AppCompatActivity {
             this.recursosArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
             this.recursosListView.setAdapter(this.recursosArrayAdapter);
         }
-        if(getIntent().hasExtra("momento")){
+        if (getIntent().hasExtra("momento")) {
             this.momento = (Momentos) getIntent().getExtras().get("momento");
+            inflateAllInputs();
         } else {
             if (getIntent().hasExtra("plano_de_aula_id")) {
                 this.planoDeAulaId = getIntent().getLongExtra("plano_de_aula_id", 0);
@@ -49,11 +51,11 @@ public class MomentosActivity extends AppCompatActivity {
         this.recursos = new ArrayList<Recursos>();
     }
 
-    public void getAttributesFromView(View view){
+    public void getAttributesFromView(View view) {
         View rootView = getWindow().getDecorView().getRootView();
         this.momento.setNome(ViewUtils.getValue(rootView, R.id.titulo));
         this.momento.setTexto(ViewUtils.getValue(rootView, R.id.texto));
-        if(isEditActivity) {
+        if (isEditActivity) {
             this.momento = this.momento.edit();
             Intent returnIntent = new Intent();
             returnIntent.putExtra("momento", this.momento);
@@ -61,14 +63,24 @@ public class MomentosActivity extends AppCompatActivity {
             setResult(RESULT_OK, returnIntent);
         } else {
             this.momento = this.momento.save(this.planoDeAulaId);
-            if(!this.recursos.isEmpty()){
-                for (Recursos recurso: this.recursos) {
+            if (!this.recursos.isEmpty()) {
+                for (Recursos recurso : this.recursos) {
                     recurso.setMomento(this.momento);
                     recurso.save();
                 }
             }
         }
         finish();
+    }
+
+    private void inflateAllInputs() {
+        View view = getWindow().getDecorView().getRootView();
+        this.setInput(ViewUtils.getEditText(view, R.id.titulo), this.momento.getNome());
+        this.setInput(ViewUtils.getEditText(view, R.id.texto), this.momento.getTexto());
+    }
+
+    private void setInput(EditText editText, String value) {
+        editText.setText(value);
     }
 
     public void adicionarRecurso(View view) {

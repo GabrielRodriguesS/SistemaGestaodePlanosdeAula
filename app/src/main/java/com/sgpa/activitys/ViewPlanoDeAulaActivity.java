@@ -16,7 +16,7 @@ import com.sgpa.models.Momentos;
 import com.sgpa.models.PlanosDeAula;
 import com.sgpa.utils.ViewUtils;
 
-public class ViewPlanoDeAula extends AppCompatActivity {
+public class ViewPlanoDeAulaActivity extends AppCompatActivity {
 
     static final int EDIT_PLANO_DE_AULA_REQUEST = 0;
     protected ArrayAdapter<Momentos> momentosAdapter;
@@ -43,7 +43,7 @@ public class ViewPlanoDeAula extends AppCompatActivity {
         this.momentosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent momentosView = new Intent(parent.getContext(), MomentosActivity.class);
+                Intent momentosView = new Intent(parent.getContext(), ViewMomentoActivity.class);
                 momentosView.putExtra("momento_id", planosDeAula.getMomentos().get(position).getId());
                 startActivity(momentosView);
             }
@@ -80,9 +80,24 @@ public class ViewPlanoDeAula extends AppCompatActivity {
         startActivityForResult(planoDeAulaView, EDIT_PLANO_DE_AULA_REQUEST);
     }
 
+    public void addMomentos(View view){
+        Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
+        momentosView.putExtra("plano_de_aula_id", this.planosDeAula.getId());
+        startActivity(momentosView);
+        finish();
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (EDIT_PLANO_DE_AULA_REQUEST == requestCode) {
-
+            if(resultCode == RESULT_OK){
+                if(data.hasExtra("plano_de_aula")) {
+                    this.planosDeAula = (PlanosDeAula) data.getExtras().get("plano_de_aula");
+                    View view = getWindow().getDecorView().getRootView();
+                    this.setText(ViewUtils.getTextView(view, R.id.titulo), "Titulo: " + this.planosDeAula.getTitulo());
+                    this.setText(ViewUtils.getTextView(view, R.id.descricao), "Descrição: " + this.planosDeAula.getDescricao());
+                    this.setText(ViewUtils.getTextView(view, R.id.sub_titulo), "Subtitulo: " + this.planosDeAula.getSubtitulo());
+                }
+            }
         }
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sgpa.activitys.ViewPlanoDeAula"
+    tools:context="com.sgpa.activitys.ViewPlanoDeAulaActivity"
     android:orientation="vertical">
 
     <LinearLayout
@@ -61,7 +61,7 @@
             android:layout_marginRight="30dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:onClick="deleteMomento"
+            android:onClick="deletePlanoDeAula"
             app:backgroundTint="@android:color/holo_red_dark"
             app:srcCompat="@android:drawable/ic_menu_delete"
             tools:ignore="RtlHardcoded" />
@@ -74,6 +74,7 @@
             android:layout_marginRight="30dp"
             android:layout_weight="1"
             android:clickable="true"
+            android:onClick="addMomentos"
             app:backgroundTint="@android:color/holo_blue_light"
             app:srcCompat="@android:drawable/ic_media_play"
             tools:ignore="RtlHardcoded" />
@@ -85,7 +86,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:clickable="true"
-            android:onClick="editMomento"
+            android:onClick="editPlanoDeAula"
             app:backgroundTint="@android:color/holo_blue_light"
             app:elevation="0dp"
             app:srcCompat="@android:drawable/ic_menu_edit" />
