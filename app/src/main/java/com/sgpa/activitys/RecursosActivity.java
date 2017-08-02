@@ -52,10 +52,10 @@ public class RecursosActivity extends AppCompatActivity {
         this.recurso.setLink(ViewUtils.getValue(rootView, R.id.link));
         Intent returnIntent = new Intent();
         if (isAddActivity) {
-            this.recurso = this.recurso.save(this.momentoId);
+            this.recurso = this.recurso.save(getApplicationContext(), this.momentoId);
         } else {
             if (isEditActivity) {
-                this.recurso = this.recurso.edit();
+                this.recurso = this.recurso.edit(getApplicationContext());
                 Toast.makeText(this, "Recurso atualizado com sucesso", Toast.LENGTH_SHORT).show();
             }
         }

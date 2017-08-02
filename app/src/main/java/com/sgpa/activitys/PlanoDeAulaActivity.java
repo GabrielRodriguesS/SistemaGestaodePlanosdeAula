@@ -1,6 +1,5 @@
 package com.sgpa.activitys;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,19 +36,19 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
 
     public void createPlanoDeAula() {
         this.getAttributesFromView();
-        this.planosDeAula = this.planosDeAula.save();
+        this.planosDeAula = this.planosDeAula.save(getApplicationContext());
         this.goToMainView();
     }
 
     public void editPlanodeAula() {
         this.getAttributesFromView();
-        this.planosDeAula = this.planosDeAula.edit();
+        this.planosDeAula = this.planosDeAula.edit(getApplicationContext());
         this.goToMainView();
     }
 
     public void createAndAddMomentosPlanoDeAula() {
         this.getAttributesFromView();
-        this.planosDeAula = this.planosDeAula.save();
+        this.planosDeAula = this.planosDeAula.save(getApplicationContext());
         this.goToAddMomentosView();
     }
 
@@ -74,7 +73,7 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
 
     private void goToMainView() {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("plano_de_aula", this.planosDeAula);
+        returnIntent.putExtra("planoDeAula", this.planosDeAula);
         setResult(RESULT_OK, returnIntent);
         finish();
     }
@@ -83,6 +82,9 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
         Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
         momentosView.putExtra("plano_de_aula_id", this.planosDeAula.getId());
         startActivity(momentosView);
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("planoDeAula", this.planosDeAula);
+        setResult(RESULT_OK, returnIntent);
         finish();
     }
 

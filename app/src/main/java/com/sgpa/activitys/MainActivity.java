@@ -9,13 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
 import com.sgpa.R;
 import com.sgpa.models.PlanosDeAula;
-import com.sgpa.utils.GsonUtils;
-import com.sgpa.utils.WebClient;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,33 +36,17 @@ public class MainActivity extends AppCompatActivity {
                 Intent planoDeAulaView = new Intent(parent.getContext(), ViewPlanoDeAulaActivity.class);
                 planoDeAulaView.putExtra("plano_de_aula_id", planoDeAulaEditar.getId());
                 startActivityForResult(planoDeAulaView, ADD_EDIT_PLANO_DE_AULA_REQUEST);
-                planosDeAulaAdapter.remove(planoDeAulaEditar);
             }
         });
     }
 
     private void inflateList() {
-        Type type = new TypeToken<ArrayList<PlanosDeAula>>() {
-        }.getType();
-        WebClient webClient = new WebClient("planoDeAula/getAll");
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-            String listaJson = webClient.getRetornoJson();
-            if (listaJson != null) {
-                listFromJson = GsonUtils.getInstance().getList(listaJson, type);
-                if (!listFromJson.isEmpty()) {
-                    planosDeAulaAdapter.addAll(listFromJson);
-                    planoDeAulaList.setAdapter(planosDeAulaAdapter);
-                } else {
-                    Toast.makeText(this, "Sem planos de aula cadastrados", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "Problemas de conexão com o servidor", Toast.LENGTH_SHORT).show();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        this.listFromJson = PlanosDeAula.getAll(getApplicationContext());
+        if (!listFromJson.isEmpty()) {
+            this.planosDeAulaAdapter.addAll(listFromJson);
+            this.planoDeAulaList.setAdapter(planosDeAulaAdapter);
+        } else {
+            Toast.makeText(this, "Sem planos de aula cadastrados", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -79,9 +59,13 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == ADD_EDIT_PLANO_DE_AULA_REQUEST) {
             if (resultCode == RESULT_OK) {
                 PlanosDeAula planosDeAula = (PlanosDeAula) data.getExtras().get("planoDeAula");
-                this.planosDeAulaAdapter.add(planosDeAula);
+                this.planosDeAulaAdapter.clear();
+                this.listFromJson.add(planosDeAula);
+                this.planosDeAulaAdapter.addAll(this.listFromJson);
                 this.planosDeAulaAdapter.notifyDataSetChanged();
             }
         }
     }
+
+
 }

@@ -1,13 +1,15 @@
 package com.sgpa.models;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
+import com.google.gson.reflect.TypeToken;
 import com.sgpa.utils.GsonUtils;
-import com.sgpa.utils.WebClient;
+import com.sgpa.utils.ThreadUtils;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
@@ -18,6 +20,13 @@ public class PlanosDeAula implements Serializable {
     private String subtitulo;
     private String descricao;
     private ArrayList<Momentos> momentos;
+
+    public static ArrayList<PlanosDeAula> getAll(Context context) {
+        Type type = new TypeToken<ArrayList<PlanosDeAula>>() {
+        }.getType();
+        String retorno = ThreadUtils.getMethod(context, "planoDeAula/getAll");
+        return GsonUtils.getInstance().getList(retorno, type);
+    }
 
     public Long getId() {
         return id;
@@ -63,8 +72,11 @@ public class PlanosDeAula implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PlanosDeAula)) return false;
+
         PlanosDeAula that = (PlanosDeAula) o;
+
         return id.equals(that.id);
+
     }
 
     @Override
@@ -78,54 +90,22 @@ public class PlanosDeAula implements Serializable {
         return "Titulo: " + this.getTitulo() + "\n" + this.getSubtitulo();
     }
 
-    public PlanosDeAula save() {
-        String json = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("planoDeAula/save", json);
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        PlanosDeAula p = (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), PlanosDeAula.class);
-        return p;
+    public PlanosDeAula save(Context context) {
+        String retorno = ThreadUtils.postMethod(context, this, "planoDeAula/save");
+        return (PlanosDeAula) GsonUtils.getInstance().getObject(retorno, this.getClass());
     }
 
-    public PlanosDeAula edit() {
-        String json = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("planoDeAula/edit/" + this.getId(), json);
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), PlanosDeAula.class);
+    public PlanosDeAula edit(Context context) {
+        String retorno = ThreadUtils.postMethod(context, this, "planoDeAula/save");
+        return (PlanosDeAula) GsonUtils.getInstance().getObject(retorno, this.getClass());
     }
 
-    public void delete() {
-        String json = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("planoDeAula/delete/" + this.getId(), json);
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void delete(Context context) {
+        ThreadUtils.postMethod(context, this, "planoDeAula/delete/" + this.getId());
     }
 
-    public PlanosDeAula show(Long id) {
-        WebClient webClient = new WebClient("planoDeAula/show/" + id);
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return (PlanosDeAula) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), PlanosDeAula.class);
+    public PlanosDeAula show(Context context, long id) {
+        String retorno = ThreadUtils.getMethod(context, "planoDeAula/show/" + id);
+        return (PlanosDeAula) GsonUtils.getInstance().getObject(retorno, this.getClass());
     }
 }

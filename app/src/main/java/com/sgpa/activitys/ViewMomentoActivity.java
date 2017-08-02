@@ -1,5 +1,6 @@
 package com.sgpa.activitys;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +36,7 @@ public class ViewMomentoActivity extends AppCompatActivity {
         this.recursosArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         if (getIntent().hasExtra("momento_id")) {
             Long id = getIntent().getLongExtra("momento_id", 0);
-            this.momento = this.momento.show(id);
+            this.momento = this.momento.show(getApplicationContext(), id);
             this.inflateAllInputs();
         }
         registerForContextMenu(this.recursosListView);
@@ -62,7 +63,7 @@ public class ViewMomentoActivity extends AppCompatActivity {
             startActivityForResult(recursosActivity, ADD_EDIT_RECURSO_REQUEST);
             return true;
         } else {
-            recurso.delete();
+            recurso.delete(getApplicationContext());
             Toast.makeText(this, "Recurso deletado com sucesso", Toast.LENGTH_SHORT).show();
             this.recursosArrayAdapter.remove(recurso);
             this.recursosArrayAdapter.notifyDataSetChanged();
@@ -86,7 +87,7 @@ public class ViewMomentoActivity extends AppCompatActivity {
     }
 
     public void deleteMomento(View view) {
-        this.momento.delete();
+        this.momento.delete(getApplicationContext());
         Toast.makeText(this, "Momento deletado com sucesso", Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
         finish();
@@ -104,6 +105,7 @@ public class ViewMomentoActivity extends AppCompatActivity {
         planoDeAulaView.putExtra("momento", this.momento);
         planoDeAulaView.putExtra("isEditActivity", true);
         startActivityForResult(planoDeAulaView, EDIT_MOMENTO_REQUEST);
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -118,6 +120,9 @@ public class ViewMomentoActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK) {
                 Momentos novoMomento = (Momentos) data.getExtras().get("momento");
                 this.momento = novoMomento;
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("momento", this.momento);
+                setResult(Activity.RESULT_OK, returnIntent);
                 View view = getWindow().getDecorView().getRootView();
                 this.setText(ViewUtils.getTextView(view, R.id.titulo), "Titulo: " + this.momento.getNome());
                 this.setText(ViewUtils.getTextView(view, R.id.descricao), "Descrição: " + this.momento.getTexto());

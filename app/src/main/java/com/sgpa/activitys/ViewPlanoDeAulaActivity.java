@@ -19,6 +19,7 @@ import com.sgpa.utils.ViewUtils;
 public class ViewPlanoDeAulaActivity extends AppCompatActivity {
 
     static final int EDIT_PLANO_DE_AULA_REQUEST = 0;
+    static final int ADD_EDIT_MOMENTO_REQUEST = 1;
     protected ArrayAdapter<Momentos> momentosAdapter;
     protected ListView momentosListView;
     private PlanosDeAula planosDeAula;
@@ -32,20 +33,18 @@ public class ViewPlanoDeAulaActivity extends AppCompatActivity {
         if (getIntent().hasExtra("plano_de_aula_id")) {
             Long id = getIntent().getLongExtra("plano_de_aula_id", 0);
             this.planosDeAula = new PlanosDeAula();
-            this.planosDeAula = this.planosDeAula.show(id);
+            this.planosDeAula = this.planosDeAula.show(getApplicationContext(), id);
         }
         if (getIntent().hasExtra("plano_de_aula")) {
             this.planosDeAula = (PlanosDeAula) getIntent().getExtras().get("plano_de_aula");
         }
         this.inflateAllInputs();
-        // TODO: adicionar o suporte ao editar dos momentos
-        // TODO: implementar o visualizar do momento talvez com um longclick com a opção de ver e editar
         this.momentosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent momentosView = new Intent(parent.getContext(), ViewMomentoActivity.class);
                 momentosView.putExtra("momento_id", planosDeAula.getMomentos().get(position).getId());
-                startActivity(momentosView);
+                startActivityForResult(momentosView, ADD_EDIT_MOMENTO_REQUEST);
             }
         });
 
@@ -67,7 +66,7 @@ public class ViewPlanoDeAulaActivity extends AppCompatActivity {
     }
 
     public void deletePlanoDeAula(View view) {
-        this.planosDeAula.delete();
+        this.planosDeAula.delete(getApplicationContext());
         Toast.makeText(this, "Plano deletado com sucesso", Toast.LENGTH_SHORT).show();
         setResult(Activity.RESULT_OK);
         finish();
@@ -83,19 +82,30 @@ public class ViewPlanoDeAulaActivity extends AppCompatActivity {
     public void addMomentos(View view){
         Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
         momentosView.putExtra("plano_de_aula_id", this.planosDeAula.getId());
-        startActivity(momentosView);
-        finish();
+        startActivityForResult(momentosView, ADD_EDIT_MOMENTO_REQUEST);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (EDIT_PLANO_DE_AULA_REQUEST == requestCode) {
             if(resultCode == RESULT_OK){
-                if(data.hasExtra("plano_de_aula")) {
-                    this.planosDeAula = (PlanosDeAula) data.getExtras().get("plano_de_aula");
+                if (data.hasExtra("planoDeAula")) {
+                    this.planosDeAula = (PlanosDeAula) data.getExtras().get("planoDeAula");
                     View view = getWindow().getDecorView().getRootView();
                     this.setText(ViewUtils.getTextView(view, R.id.titulo), "Titulo: " + this.planosDeAula.getTitulo());
                     this.setText(ViewUtils.getTextView(view, R.id.descricao), "Descrição: " + this.planosDeAula.getDescricao());
                     this.setText(ViewUtils.getTextView(view, R.id.sub_titulo), "Subtitulo: " + this.planosDeAula.getSubtitulo());
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("planoDeAula", this.planosDeAula);
+                    setResult(Activity.RESULT_OK, returnIntent);
+                }
+            }
+        }
+        if (ADD_EDIT_MOMENTO_REQUEST == requestCode) {
+            if (resultCode == RESULT_OK) {
+                if (data.hasExtra("momento")) {
+                    Momentos momentos = (Momentos) data.getExtras().get("momento");
+                    this.momentosAdapter.clear();
+                    this.momentosAdapter.addAll(this.planosDeAula.getMomentos());
                 }
             }
         }
