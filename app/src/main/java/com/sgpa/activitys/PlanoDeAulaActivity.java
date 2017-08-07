@@ -1,6 +1,5 @@
 package com.sgpa.activitys;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,13 +7,16 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.sgpa.R;
+import com.sgpa.models.Momentos;
 import com.sgpa.models.PlanosDeAula;
 import com.sgpa.utils.ViewUtils;
+
+import java.util.ArrayList;
 
 public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnClickListener {
 
     // TODO: adicionar as coisas da progressbar
-    protected PlanosDeAula planosDeAula;
+    protected PlanosDeAula planoDeAula;
     protected boolean edit;
 
     @Override
@@ -24,41 +26,42 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
         findViewById(R.id.save_plano_button).setOnClickListener(this);
         findViewById(R.id.add_momentos_button).setOnClickListener(this);
         if (getIntent().hasExtra("planoDeAula")) {
-            this.planosDeAula = (PlanosDeAula) getIntent().getExtras().get("planoDeAula");
+            this.planoDeAula = (PlanosDeAula) getIntent().getExtras().get("planoDeAula");
             this.inflateAllInputs();
         }
         if (getIntent().hasExtra("edit")) {
             this.edit = (boolean) getIntent().getExtras().get("edit");
             findViewById(R.id.add_momentos_button).setVisibility(View.GONE);
         } else {
-            this.planosDeAula = new PlanosDeAula();
+            this.planoDeAula = new PlanosDeAula();
         }
     }
 
     public void createPlanoDeAula() {
         this.getAttributesFromView();
-        this.planosDeAula = this.planosDeAula.save();
+        this.planoDeAula = this.planoDeAula.save(getApplicationContext());
         this.goToMainView();
     }
 
     public void editPlanodeAula() {
         this.getAttributesFromView();
-        this.planosDeAula = this.planosDeAula.edit();
+        ArrayList<Momentos> momentos = this.planoDeAula.getMomentos();
+        this.planoDeAula = this.planoDeAula.edit(getApplicationContext());
+        this.planoDeAula.setMomentos(momentos);
         this.goToMainView();
     }
 
     public void createAndAddMomentosPlanoDeAula() {
         this.getAttributesFromView();
-        this.planosDeAula = this.planosDeAula.save();
+        this.planoDeAula = this.planoDeAula.save(getApplicationContext());
         this.goToAddMomentosView();
     }
 
     private void inflateAllInputs() {
         View view = getWindow().getDecorView().getRootView();
-        this.setInput(ViewUtils.getEditText(view, R.id.titulo), this.planosDeAula.getTitulo());
-        this.setInput(ViewUtils.getEditText(view, R.id.descricao), this.planosDeAula.getDescricao());
-        this.setInput(ViewUtils.getEditText(view, R.id.subtitulo), this.planosDeAula.getSubtitulo());
-
+        this.setInput(ViewUtils.getEditText(view, R.id.titulo), this.planoDeAula.getTitulo());
+        this.setInput(ViewUtils.getEditText(view, R.id.descricao), this.planoDeAula.getDescricao());
+        this.setInput(ViewUtils.getEditText(view, R.id.subtitulo), this.planoDeAula.getSubtitulo());
     }
 
     private void setInput(EditText editText, String value) {
@@ -67,22 +70,25 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
 
     private void getAttributesFromView() {
         View view = getWindow().getDecorView().getRootView();
-        this.planosDeAula.setTitulo(ViewUtils.getValue(view, R.id.titulo));
-        this.planosDeAula.setSubtitulo(ViewUtils.getValue(view, R.id.subtitulo));
-        this.planosDeAula.setDescricao(ViewUtils.getValue(view, R.id.descricao));
+        this.planoDeAula.setTitulo(ViewUtils.getValue(view, R.id.titulo));
+        this.planoDeAula.setSubtitulo(ViewUtils.getValue(view, R.id.subtitulo));
+        this.planoDeAula.setDescricao(ViewUtils.getValue(view, R.id.descricao));
     }
 
     private void goToMainView() {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("plano_de_aula", this.planosDeAula);
+        returnIntent.putExtra("planoDeAula", this.planoDeAula);
         setResult(RESULT_OK, returnIntent);
         finish();
     }
 
     private void goToAddMomentosView() {
         Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
-        momentosView.putExtra("plano_de_aula_id", this.planosDeAula.getId());
+        momentosView.putExtra("plano_de_aula_id", this.planoDeAula.getId());
         startActivity(momentosView);
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("planoDeAula", this.planoDeAula);
+        setResult(RESULT_OK, returnIntent);
         finish();
     }
 

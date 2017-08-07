@@ -56,19 +56,23 @@ public class MomentosActivity extends AppCompatActivity {
         this.momento.setNome(ViewUtils.getValue(rootView, R.id.titulo));
         this.momento.setTexto(ViewUtils.getValue(rootView, R.id.texto));
         if (isEditActivity) {
-            this.momento = this.momento.edit();
+            this.momento = this.momento.edit(getApplicationContext());
             Intent returnIntent = new Intent();
             returnIntent.putExtra("momento", this.momento);
             Toast.makeText(this, "Momento atualizado com sucesso", Toast.LENGTH_SHORT).show();
             setResult(RESULT_OK, returnIntent);
         } else {
-            this.momento = this.momento.save(this.planoDeAulaId);
+            this.momento = this.momento.save(getApplicationContext(), this.planoDeAulaId);
             if (!this.recursos.isEmpty()) {
                 for (Recursos recurso : this.recursos) {
                     recurso.setMomento(this.momento);
-                    recurso.save();
+                    recurso.save(getApplicationContext());
                 }
             }
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("momento", this.momento);
+            Toast.makeText(this, "Momento salvo com sucesso", Toast.LENGTH_SHORT).show();
+            setResult(RESULT_OK, returnIntent);
         }
         finish();
     }

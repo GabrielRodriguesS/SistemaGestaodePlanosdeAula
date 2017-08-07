@@ -9,18 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
 import com.sgpa.R;
 import com.sgpa.models.PlanosDeAula;
-import com.sgpa.utils.GsonUtils;
-import com.sgpa.utils.WebClient;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    static final int ADD_EDIT_PLANO_DE_AULA_REQUEST = 0;
+    static final int ADD_EDIT_DELETE_PLANO_DE_AULA_REQUEST = 0;
     protected ArrayAdapter<PlanosDeAula> planosDeAulaAdapter;
     protected ArrayList<PlanosDeAula> listFromJson;
     protected ListView planoDeAulaList;
@@ -39,49 +35,48 @@ public class MainActivity extends AppCompatActivity {
                 PlanosDeAula planoDeAulaEditar = listFromJson.get(position);
                 Intent planoDeAulaView = new Intent(parent.getContext(), ViewPlanoDeAulaActivity.class);
                 planoDeAulaView.putExtra("plano_de_aula_id", planoDeAulaEditar.getId());
-                startActivityForResult(planoDeAulaView, ADD_EDIT_PLANO_DE_AULA_REQUEST);
-                planosDeAulaAdapter.remove(planoDeAulaEditar);
+                planoDeAulaView.putExtra("position", position);
+                startActivityForResult(planoDeAulaView, ADD_EDIT_DELETE_PLANO_DE_AULA_REQUEST);
             }
         });
     }
 
     private void inflateList() {
-        Type type = new TypeToken<ArrayList<PlanosDeAula>>() {
-        }.getType();
-        WebClient webClient = new WebClient("planoDeAula/getAll");
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-            String listaJson = webClient.getRetornoJson();
-            if (listaJson != null) {
-                listFromJson = GsonUtils.getInstance().getList(listaJson, type);
-                if (!listFromJson.isEmpty()) {
-                    planosDeAulaAdapter.addAll(listFromJson);
-                    planoDeAulaList.setAdapter(planosDeAulaAdapter);
-                } else {
-                    Toast.makeText(this, "Sem planos de aula cadastrados", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "Problemas de conexão com o servidor", Toast.LENGTH_SHORT).show();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        ArrayList returnList = PlanosDeAula.getAll(getApplicationContext());
+        if (returnList != null)
+            this.listFromJson = PlanosDeAula.getAll(getApplicationContext());
+        if (!listFromJson.isEmpty()) {
+            this.planosDeAulaAdapter.addAll(listFromJson);
+            this.planoDeAulaList.setAdapter(planosDeAulaAdapter);
+        } else {
+            Toast.makeText(this, "Sem planos de aula cadastrados", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void createPlanoDeAula(View view) {
         Intent viewActivity = new Intent(this, PlanoDeAulaActivity.class);
-        startActivityForResult(viewActivity, ADD_EDIT_PLANO_DE_AULA_REQUEST);
+        startActivityForResult(viewActivity, ADD_EDIT_DELETE_PLANO_DE_AULA_REQUEST);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_EDIT_PLANO_DE_AULA_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                PlanosDeAula planosDeAula = (PlanosDeAula) data.getExtras().get("planoDeAula");
-                this.planosDeAulaAdapter.add(planosDeAula);
-                this.planosDeAulaAdapter.notifyDataSetChanged();
+        if (resultCode == RESULT_OK) {
+            if (requestCode == ADD_EDIT_DELETE_PLANO_DE_AULA_REQUEST) {
+                if (data.hasExtra("position")) {
+                    listFromJson.remove(data.getIntExtra("position", 0));
+                }
+                if (data.hasExtra("planoDeAula")) {
+                    PlanosDeAula planosDeAula = (PlanosDeAula) data.getExtras().get("planoDeAula");
+                    this.listFromJson.add(planosDeAula);
+                }
+                this.updateAdapter();
             }
         }
+    }
+
+
+    public void updateAdapter() {
+        this.planosDeAulaAdapter.clear();
+        this.planosDeAulaAdapter.addAll(this.listFromJson);
+        this.planosDeAulaAdapter.notifyDataSetChanged();
     }
 }

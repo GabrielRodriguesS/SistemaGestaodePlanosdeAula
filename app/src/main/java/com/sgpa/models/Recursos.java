@@ -1,9 +1,11 @@
 package com.sgpa.models;
 
 
+import android.content.Context;
+
 import com.google.gson.annotations.SerializedName;
 import com.sgpa.utils.GsonUtils;
-import com.sgpa.utils.WebClient;
+import com.sgpa.utils.ThreadUtils;
 
 import java.io.Serializable;
 
@@ -51,7 +53,6 @@ public class Recursos implements Serializable {
         Recursos recursos = (Recursos) o;
 
         return id != null ? id.equals(recursos.id) : recursos.id == null;
-
     }
 
     @Override
@@ -59,54 +60,22 @@ public class Recursos implements Serializable {
         return id != null ? id.hashCode() : 0;
     }
 
-    public Recursos save() {
-        String object = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("recurso/save/"+this.getMomento().getId(), object);
-        Thread t = new Thread(webClient);
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return (Recursos) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), Recursos.class);
+    public Recursos save(Context context) {
+        String retorno = ThreadUtils.postMethod(context, this, "recurso/save/" + this.getMomento().getId());
+        return (Recursos) GsonUtils.getInstance().getObject(retorno, this.getClass());
     }
 
-    public Recursos save(long momentoId) {
-        String object = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("recurso/save/"+momentoId, object);
-        Thread t = new Thread(webClient);
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return (Recursos) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), Recursos.class);
+    public Recursos save(Context context, long momentoId) {
+        String retorno = ThreadUtils.postMethod(context, this, "recurso/save/" + momentoId);
+        return (Recursos) GsonUtils.getInstance().getObject(retorno, this.getClass());
     }
 
-    public Recursos edit() {
-        String object = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("recurso/edit/"+this.getId(), object);
-        Thread t = new Thread(webClient);
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return (Recursos) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), Recursos.class);
+    public Recursos edit(Context context) {
+        String retorno = ThreadUtils.postMethod(context, this, "recurso/edit/" + this.getId());
+        return (Recursos) GsonUtils.getInstance().getObject(retorno, this.getClass());
     }
 
-    public void delete(){
-        String json = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("recurso/delete/" + this.getId(), json);
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void delete(Context context) {
+        ThreadUtils.postMethod(context, this, "recurso/delete/" + this.getId());
     }
 }

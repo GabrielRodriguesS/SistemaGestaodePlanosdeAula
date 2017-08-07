@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="462dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
@@ -18,7 +18,7 @@
         <ListView
             android:id="@+id/list_plano_de_aula"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="462dp"
             android:longClickable="true"
             tools:ignore="NestedScrolling"
             tools:layout_editor_absoluteX="67dp"
@@ -27,7 +27,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
         tools:layout_editor_absoluteX="8dp"
@@ -37,7 +37,6 @@
             android:id="@+id/create_plano_de_aula"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_weight="1"
             android:clickable="true"
             android:onClick="createPlanoDeAula"

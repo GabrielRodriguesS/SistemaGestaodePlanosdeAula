@@ -1,9 +1,11 @@
 package com.sgpa.models;
 
 
+import android.content.Context;
+
 import com.google.gson.annotations.SerializedName;
 import com.sgpa.utils.GsonUtils;
-import com.sgpa.utils.WebClient;
+import com.sgpa.utils.ThreadUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ public class Momentos implements Serializable {
 
     @Override
     public String toString() {
-        return this.getId().toString();
+        return "Nome: " + this.getNome();
     }
 
     @Override
@@ -79,54 +81,22 @@ public class Momentos implements Serializable {
         return id != null ? id.hashCode() : 0;
     }
 
-    public Momentos save(long planoDeAulaId){
-        String object = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("momento/save/"+planoDeAulaId, object);
-        Thread t = new Thread(webClient);
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Momentos m = (Momentos) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), Momentos.class);
-        return m;
+    public Momentos save(Context context, long planoDeAulaId) {
+        String retorno = ThreadUtils.postMethod(context, this, "momento/save/" + planoDeAulaId);
+        return (Momentos) GsonUtils.getInstance().getObject(retorno, this.getClass());
     }
 
-    public Momentos edit(){
-        String object = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("momento/edit/"+getId(), object);
-        Thread t = new Thread(webClient);
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return (Momentos) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), Momentos.class);
+    public Momentos edit(Context context) {
+        String retorno = ThreadUtils.postMethod(context, this, "momento/edit/" + getId());
+        return (Momentos) GsonUtils.getInstance().getObject(retorno, this.getClass());
     }
 
-    public void delete() {
-        String json = GsonUtils.getInstance().setObject(this);
-        WebClient webClient = new WebClient("momento/delete/" + this.getId(), json);
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void delete(Context context) {
+        ThreadUtils.postMethod(context, this, "momento/delete/" + this.getId());
     }
 
-    public Momentos show(long id) {
-        WebClient webClient = new WebClient("momento/show/" + id);
-        Thread thread = new Thread(webClient);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return (Momentos) GsonUtils.getInstance().getObject(webClient.getRetornoJson(), Momentos.class);
+    public Momentos show(Context context, long id) {
+        String retorno = ThreadUtils.getMethod(context, "momento/show/" + id);
+        return (Momentos) GsonUtils.getInstance().getObject(retorno, this.getClass());
     }
 }
