@@ -96,7 +96,7 @@ public class PlanosDeAula implements Serializable {
     }
 
     public PlanosDeAula edit(Context context) {
-        String retorno = ThreadUtils.postMethod(context, this, "planoDeAula/save");
+        String retorno = ThreadUtils.postMethod(context, this, "planoDeAula/edit/"+ this.getId());
         return (PlanosDeAula) GsonUtils.getInstance().getObject(retorno, this.getClass());
     }
 

@@ -69,6 +69,10 @@ public class MomentosActivity extends AppCompatActivity {
                     recurso.save(getApplicationContext());
                 }
             }
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("momento", this.momento);
+            Toast.makeText(this, "Momento salvo com sucesso", Toast.LENGTH_SHORT).show();
+            setResult(RESULT_OK, returnIntent);
         }
         finish();
     }

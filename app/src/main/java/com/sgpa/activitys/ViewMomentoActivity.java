@@ -21,11 +21,11 @@ import com.sgpa.utils.ViewUtils;
 
 public class ViewMomentoActivity extends AppCompatActivity {
 
+    static final int ADD_EDIT_RECURSO_REQUEST = 0;
+    static final int EDIT_MOMENTO_REQUEST = 1;
     protected ArrayAdapter<Recursos> recursosArrayAdapter;
     protected ListView recursosListView;
     private Momentos momento;
-    static final int ADD_EDIT_RECURSO_REQUEST = 0;
-    static final int EDIT_MOMENTO_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,15 +89,17 @@ public class ViewMomentoActivity extends AppCompatActivity {
     public void deleteMomento(View view) {
         this.momento.delete(getApplicationContext());
         Toast.makeText(this, "Momento deletado com sucesso", Toast.LENGTH_SHORT).show();
+        Intent planoDeAulaView = new Intent(this, ViewPlanoDeAulaActivity.class);
+        planoDeAulaView.putExtra("momento", this.momento);
         setResult(RESULT_OK);
         finish();
     }
 
     public void adicionarRecurso(View view) {
-        Intent planoDeAulaView = new Intent(this, RecursosActivity.class);
-        planoDeAulaView.putExtra("momentoId", this.momento.getId());
-        planoDeAulaView.putExtra("isAddActivity", true);
-        startActivityForResult(planoDeAulaView, ADD_EDIT_RECURSO_REQUEST);
+        Intent recursosView = new Intent(this, RecursosActivity.class);
+        recursosView.putExtra("momentoId", this.momento.getId());
+        recursosView.putExtra("isAddActivity", true);
+        startActivityForResult(recursosView, ADD_EDIT_RECURSO_REQUEST);
     }
 
     public void editMomento(View view) {
@@ -109,15 +111,14 @@ public class ViewMomentoActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_EDIT_RECURSO_REQUEST) {
-            if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == ADD_EDIT_RECURSO_REQUEST) {
                 Recursos recurso = (Recursos) data.getExtras().get("recurso");
                 this.recursosArrayAdapter.add(recurso);
                 this.recursosArrayAdapter.notifyDataSetChanged();
+
             }
-        }
-        if (requestCode == EDIT_MOMENTO_REQUEST) {
-            if(resultCode == RESULT_OK) {
+            if (requestCode == EDIT_MOMENTO_REQUEST) {
                 Momentos novoMomento = (Momentos) data.getExtras().get("momento");
                 this.momento = novoMomento;
                 Intent returnIntent = new Intent();

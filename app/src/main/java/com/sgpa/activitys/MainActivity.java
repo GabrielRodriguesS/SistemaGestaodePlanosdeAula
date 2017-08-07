@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    static final int ADD_EDIT_PLANO_DE_AULA_REQUEST = 0;
+    static final int ADD_EDIT_DELETE_PLANO_DE_AULA_REQUEST = 0;
     protected ArrayAdapter<PlanosDeAula> planosDeAulaAdapter;
     protected ArrayList<PlanosDeAula> listFromJson;
     protected ListView planoDeAulaList;
@@ -35,13 +35,16 @@ public class MainActivity extends AppCompatActivity {
                 PlanosDeAula planoDeAulaEditar = listFromJson.get(position);
                 Intent planoDeAulaView = new Intent(parent.getContext(), ViewPlanoDeAulaActivity.class);
                 planoDeAulaView.putExtra("plano_de_aula_id", planoDeAulaEditar.getId());
-                startActivityForResult(planoDeAulaView, ADD_EDIT_PLANO_DE_AULA_REQUEST);
+                planoDeAulaView.putExtra("position", position);
+                startActivityForResult(planoDeAulaView, ADD_EDIT_DELETE_PLANO_DE_AULA_REQUEST);
             }
         });
     }
 
     private void inflateList() {
-        this.listFromJson = PlanosDeAula.getAll(getApplicationContext());
+        ArrayList returnList = PlanosDeAula.getAll(getApplicationContext());
+        if (returnList != null)
+            this.listFromJson = PlanosDeAula.getAll(getApplicationContext());
         if (!listFromJson.isEmpty()) {
             this.planosDeAulaAdapter.addAll(listFromJson);
             this.planoDeAulaList.setAdapter(planosDeAulaAdapter);
@@ -52,20 +55,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void createPlanoDeAula(View view) {
         Intent viewActivity = new Intent(this, PlanoDeAulaActivity.class);
-        startActivityForResult(viewActivity, ADD_EDIT_PLANO_DE_AULA_REQUEST);
+        startActivityForResult(viewActivity, ADD_EDIT_DELETE_PLANO_DE_AULA_REQUEST);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_EDIT_PLANO_DE_AULA_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                PlanosDeAula planosDeAula = (PlanosDeAula) data.getExtras().get("planoDeAula");
-                this.planosDeAulaAdapter.clear();
-                this.listFromJson.add(planosDeAula);
-                this.planosDeAulaAdapter.addAll(this.listFromJson);
-                this.planosDeAulaAdapter.notifyDataSetChanged();
+        if (resultCode == RESULT_OK) {
+            if (requestCode == ADD_EDIT_DELETE_PLANO_DE_AULA_REQUEST) {
+                if (data.hasExtra("position")) {
+                    listFromJson.remove(data.getIntExtra("position", 0));
+                }
+                if (data.hasExtra("planoDeAula")) {
+                    PlanosDeAula planosDeAula = (PlanosDeAula) data.getExtras().get("planoDeAula");
+                    this.listFromJson.add(planosDeAula);
+                }
+                this.updateAdapter();
             }
         }
     }
 
 
+    public void updateAdapter() {
+        this.planosDeAulaAdapter.clear();
+        this.planosDeAulaAdapter.addAll(this.listFromJson);
+        this.planosDeAulaAdapter.notifyDataSetChanged();
+    }
 }
