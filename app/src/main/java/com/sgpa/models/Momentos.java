@@ -16,9 +16,9 @@ public class Momentos implements Serializable {
     private String nome;
     private String texto;
     @SerializedName("planoDeAula")
-    private PlanosDeAula planoDeAula;
+    private PlanosDeAula planoDeAula = new PlanosDeAula();
     @SerializedName("recursos")
-    private ArrayList<Recursos> recursos;
+    private ArrayList<Recursos> recursos = new ArrayList<>();
 
     public Long getId() {
         return id;

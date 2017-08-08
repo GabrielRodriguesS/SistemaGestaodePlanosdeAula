@@ -18,6 +18,7 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
     // TODO: adicionar as coisas da progressbar
     protected PlanosDeAula planoDeAula;
     protected boolean edit;
+    static final int ADD_MOMENTO_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +86,7 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
     private void goToAddMomentosView() {
         Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
         momentosView.putExtra("plano_de_aula_id", this.planoDeAula.getId());
-        startActivity(momentosView);
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("planoDeAula", this.planoDeAula);
-        setResult(RESULT_OK, returnIntent);
-        finish();
+        startActivityForResult(momentosView, ADD_MOMENTO_REQUEST);
     }
 
     @Override
@@ -101,6 +98,21 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
                 this.createAndAddMomentosPlanoDeAula();
             } else {
                 this.createPlanoDeAula();
+            }
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (ADD_MOMENTO_REQUEST == requestCode) {
+            if (resultCode == RESULT_OK) {
+                Momentos momento = (Momentos) data.getExtras().get("momento");
+                if (data.hasExtra("momento")) {
+                    this.planoDeAula.getMomentos().add(momento);
+                }
+                Intent returnIntent = new Intent(getApplicationContext(), ViewPlanoDeAulaActivity.class);
+                returnIntent.putExtra("planoDeAula", this.planoDeAula);
+                setResult(RESULT_OK, returnIntent);
+                startActivity(returnIntent);
             }
         }
     }

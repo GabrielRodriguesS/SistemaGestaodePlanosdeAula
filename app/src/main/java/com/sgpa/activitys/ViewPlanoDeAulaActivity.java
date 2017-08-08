@@ -41,8 +41,8 @@ public class ViewPlanoDeAulaActivity extends AppCompatActivity {
             this.planoDeAula = new PlanosDeAula();
             this.planoDeAula = this.planoDeAula.show(getApplicationContext(), id);
         }
-        if (getIntent().hasExtra("plano_de_aula")) {
-            this.planoDeAula = (PlanosDeAula) getIntent().getExtras().get("plano_de_aula");
+        if (getIntent().hasExtra("planoDeAula")) {
+            this.planoDeAula = (PlanosDeAula) getIntent().getExtras().get("planoDeAula");
         }
         this.inflateAllInputs();
         this.momentosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
