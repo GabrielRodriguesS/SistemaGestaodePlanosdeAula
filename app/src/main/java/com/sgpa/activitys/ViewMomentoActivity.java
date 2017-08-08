@@ -90,8 +90,8 @@ public class ViewMomentoActivity extends AppCompatActivity {
         this.momento.delete(getApplicationContext());
         Toast.makeText(this, "Momento deletado com sucesso", Toast.LENGTH_SHORT).show();
         Intent planoDeAulaView = new Intent(this, ViewPlanoDeAulaActivity.class);
-        planoDeAulaView.putExtra("momento", this.momento);
-        setResult(RESULT_OK);
+        planoDeAulaView.putExtra("position", getIntent().getIntExtra("position", 0));
+        setResult(RESULT_OK, planoDeAulaView);
         finish();
     }
 

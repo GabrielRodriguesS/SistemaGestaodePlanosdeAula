@@ -47,6 +47,7 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
     public void editPlanodeAula() {
         this.getAttributesFromView();
         ArrayList<Momentos> momentos = this.planoDeAula.getMomentos();
+        this.planoDeAula.setMomentos(null);
         this.planoDeAula = this.planoDeAula.edit(getApplicationContext());
         this.planoDeAula.setMomentos(momentos);
         this.goToMainView();
@@ -105,8 +106,11 @@ public class PlanoDeAulaActivity extends AppCompatActivity implements View.OnCli
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (ADD_MOMENTO_REQUEST == requestCode) {
             if (resultCode == RESULT_OK) {
-                Momentos momento = (Momentos) data.getExtras().get("momento");
                 if (data.hasExtra("momento")) {
+                    Momentos momento = (Momentos) data.getExtras().get("momento");
+                    if(this.planoDeAula.getMomentos() == null) {
+                        this.planoDeAula.setMomentos(new ArrayList<Momentos>());
+                    }
                     this.planoDeAula.getMomentos().add(momento);
                 }
                 Intent returnIntent = new Intent(getApplicationContext(), ViewPlanoDeAulaActivity.class);

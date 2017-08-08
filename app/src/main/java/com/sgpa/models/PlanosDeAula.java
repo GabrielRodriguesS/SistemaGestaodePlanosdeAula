@@ -19,7 +19,7 @@ public class PlanosDeAula implements Serializable {
     private String titulo;
     private String subtitulo;
     private String descricao;
-    private ArrayList<Momentos> momentos = new ArrayList<>();
+    private ArrayList<Momentos> momentos;
 
     public static ArrayList<PlanosDeAula> getAll(Context context) {
         Type type = new TypeToken<ArrayList<PlanosDeAula>>() {

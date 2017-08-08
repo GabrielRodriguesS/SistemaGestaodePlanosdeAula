@@ -14,7 +14,7 @@ public class Recursos implements Serializable {
     private Long id;
     private String link;
     @SerializedName("momento")
-    private Momentos momento = new Momentos();
+    private Momentos momento;
 
     public Long getId() {
         return id;

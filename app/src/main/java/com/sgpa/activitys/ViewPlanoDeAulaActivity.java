@@ -24,7 +24,7 @@ import static com.sgpa.activitys.ViewMomentoActivity.EDIT_MOMENTO_REQUEST;
 public class ViewPlanoDeAulaActivity extends AppCompatActivity {
 
     static final int EDIT_PLANO_DE_AULA_REQUEST = 2;
-    static final int ADD_MOMENTO_REQUEST = 1;
+    static final int VIEW_MOMENTO_REQUEST = 1;
     protected ArrayAdapter<Momentos> momentosAdapter;
     protected ListView momentosListView;
     private PlanosDeAula planoDeAula;
@@ -51,7 +51,7 @@ public class ViewPlanoDeAulaActivity extends AppCompatActivity {
                 Intent momentosView = new Intent(parent.getContext(), ViewMomentoActivity.class);
                 momentosView.putExtra("momento_id", planoDeAula.getMomentos().get(position).getId());
                 momentosView.putExtra("position", position);
-                startActivityForResult(momentosView, ADD_MOMENTO_REQUEST);
+                startActivityForResult(momentosView, VIEW_MOMENTO_REQUEST);
             }
         });
         this.foiEditado = false;
@@ -124,7 +124,7 @@ public class ViewPlanoDeAulaActivity extends AppCompatActivity {
     public void addMomentos(View view) {
         Intent momentosView = new Intent(getApplicationContext(), MomentosActivity.class);
         momentosView.putExtra("plano_de_aula_id", this.planoDeAula.getId());
-        startActivityForResult(momentosView, ADD_MOMENTO_REQUEST);
+        startActivityForResult(momentosView, VIEW_MOMENTO_REQUEST);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -138,13 +138,14 @@ public class ViewPlanoDeAulaActivity extends AppCompatActivity {
                     setResult(Activity.RESULT_OK, returnIntent);
                 }
             }
-            if (ADD_MOMENTO_REQUEST == requestCode) {
-                Momentos momento = (Momentos) data.getExtras().get("momento");
+            if (VIEW_MOMENTO_REQUEST == requestCode) {
                 if (data.hasExtra("momento")) {
+                    Momentos momento = (Momentos) data.getExtras().get("momento");
                     this.planoDeAula.getMomentos().add(momento);
                     this.updateAdapter();
-                } else {
-                    this.planoDeAula.getMomentos().remove(momento);
+                }
+                if (data.hasExtra("position")) {
+                    this.planoDeAula.getMomentos().remove(data.getIntExtra("position", 0));
                     this.updateAdapter();
                 }
             }
